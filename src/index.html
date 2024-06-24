@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js"></script>
+    <title>Map Tool</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<header>
+
+    <a id="save-project-button" href="#">Save Project</a>
+    <a id="load-project-button" href="#">Load Project</a>
+</header>
+
+<body>
+    <div class='app-container'>
+
+        <div id="project_title_container">
+            <label id="map_name_label">Untitled Map</label>
+        </div>
+        <canvas id="myCanvas" resize></canvas>
+        <div id='zoom_level_display'>
+            Zoom Level:
+        </div>
+        <div class='toolbar'>
+            <a class='tool' id='line_tool_button' href="#">Line</a>
+            <a class='tool' id='freedraw_tool_button' href="#">Free Draw</a>
+            <a class='tool' id='coastal_tool_button' href="#">Coastline Tool</a>
+            <a class='tool' id='selection_tool_button' href="#">Selection Tool</a>
+            <a class='tool' id='dotlabel_tool_button' href="#">Dot & Label Tool</a>
+
+        </div>
+        <div class='tool-info'>
+            <label>Brush Width:</label>
+            <input type="range" min="0.00001" max="10.000" step='0.0001' value="1" id="stroke-width-slider">
+
+        </div>
+    </div>
+    <script src="Common.js"></script>
+    <script src="AppState.js"></script>
+    <script type="module" src="main.js"></script>
+
+</body>
+<footer>
+
+    <ul> Info:
+        <li>
+            PROJECT WILL NOT AUTOSAVE UNTIL A SAVE FILE IS CREATED. After that it should autosave every 6 seconds.
+            Projects can be loaded as well.
+
+        </li>
+        <li>General Navigation: MouseWheel click and drag to pan the view.
+        <li>Mousewheel to scroll</li>
+        <li>Map layers a work in progress, objects fading out. Disabled for now for testing purposes</li>
+        <li>Snapshots are created on mouse up. This unables undo with ctrl-z. I defaulted the undo history to 20, can be increased.</li>
+        <li>Don't be ridiculous with the undo, if you think that a certain pattern of behavior might break it, it will. Loading an old document will remove undo history. Calling undo at this point might be sketchy.In the future, autosaves will be stored seperately to prevent backup overriding.</li>
+        </li>
+        <li>Freedraw tool has brushwidth slider, it does nothing, as with infinite zoom, this presents a problem. We'll get there</li>
+        <li>Simplify lines defaults to on, this reduces the amount of points created, and the line is simplified. Can lead to slightly unexpected lines, but much nicer for coastal lines.</li>
+        <li>Selection tool: when holding shift, rectangular selection is created. When not holding shift, drag will move the selected points. Delete key to delete paths.Shift click on nothing to deselect all.</li>
+        <li>Delete function now prompts for confirmation if deleting more than 5 points, because I may have accidentally deleted hundreds on accident one time. Path selection has since been updated, but just to be safe.</li>
+        <li>Coastal Tool: Once a path is selected, the ENTIRE PATH in which the selected points reside can be subdivided, and displaced.</li>
+        <li>Deleting a large internal section of a coastline, if it intersects itself should resolve the path for you(connecting the points)</li>
+    </ul>
+</footer>
+
+</html>

@@ -1,0 +1,82 @@
+function onMouseDown(event) {
+  if (event.event.which !== 1) {
+    return;
+  }
+
+  if (event.modifiers.shift) { // Shift key for individual point selection
+    handlePointSelection(event.point);
+  } else { // No modifiers for rectangle selection
+    handleRectangleSelectionStart(event.point);
+  }
+}
+
+function handlePointSelection(point) {
+  selectedPoints = [];
+  allPaths.forEach(path => {
+    path.segments.forEach(segment => {
+      if (segment.point.getDistance(point) < 10) {
+        selectedPoints.push(segment);
+        segment.selected = true;
+      }
+    });
+  });
+}
+
+function handleRectangleSelectionStart(point) {
+  selectedPoints = [];
+  selectionRectangle = new paper.Path.Rectangle({
+    from: point,
+    to: point,
+    strokeColor: 'blue',
+    dashArray: [4, 4],
+  });
+}
+
+function onMouseDrag(event) {
+  if (event.event.which !== 1) {
+    return;
+  }
+
+  if (selectionRectangle) {
+    handleRectangleSelectionUpdate(event.point);
+  } else {
+    moveSelectedPoints(event.delta);
+  }
+}
+
+function handleRectangleSelectionUpdate(point) {
+  selectionRectangle.segments[1].point = point; // Update rectangle corner
+  selectPointsWithinRectangle();
+}
+
+function moveSelectedPoints(delta) {
+  selectedPoints.forEach(segment => {
+    segment.point = segment.point.add(delta);
+  });
+}
+
+function selectPointsWithinRectangle() {
+  deselectAllPoints();
+  allPaths.forEach(path => {
+    path.segments.forEach(segment => {
+      if (selectionRectangle.contains(segment.point)) {
+        selectedPoints.push(segment);
+        segment.selected = true;
+      }
+    });
+  });
+}
+
+function onMouseUp(event) {
+  if (selectionRectangle) {
+    selectionRectangle.remove();
+    selectionRectangle = null;
+  }
+}
+
+function deselectAllPoints() {
+  selectedPoints.forEach(segment => {
+    segment.selected = false;
+  });
+  selectedPoints = [];
+}

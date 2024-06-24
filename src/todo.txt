@@ -1,0 +1,30 @@
+
+Scalable SVG editor
+    Editing:
+        - Coastal line tool.
+        - Fill with color
+        - Magnetic dot connect
+    Functionality:
+        - Add icons that expand into info
+        - Cities names are weighted, like a real map.
+
+        
+
+Data structure=> 
+    map scope:
+        Continent:  zoom level 0    | at zoom level 0, all the cities are represented as dots, all levels lower than city do not show labels
+        District:   zoom level 20 
+        City:       zoom level 50
+        Indoor:     zoom level 100
+
+
+PathObject
+{
+    Path,
+    Layer
+}
+store the layer the object was created on.
+only show city layer if we're at city zoom level etc..
+
+
+
