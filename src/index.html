@@ -42,26 +42,39 @@
 
 </body>
 <footer>
+        <details>
+          <summary>Info</summary>
+          <div>
+            <p>PROJECT WILL NOT AUTOSAVE UNTIL A SAVE FILE IS CREATED. After that it should autosave every 60 seconds. Projects can be loaded as well.</p>
+            <p>The autosave is a bit excessive, but for the time being, it prevents dataloss pretty well. In theory, with this gratuitous autosave, you can always revert back if you accidentally break something.</p>
+            <p>AutoSaves are stored in the Saves/Backups folder</p>
+            <p>Map layers are a work in progress, objects fading out. Disabled for now for testing purposes</p>
+            <p>Don't be ridiculous with the undo, if you think that a certain pattern of behavior might break it, it will. Loading an old document *might* remove undo history. Calling undo at this point might be sketchy.</p>
+          </div>
+        </details>
+      
+        <details>
+          <summary>Navigation & General Usage</summary>
+          <div>
+            <p>General Navigation: MouseWheel click and drag to pan the view.</p>
+            <p>Mousewheel to scroll</p>
+            <p>Snapshots are created on mouse up. This enables undo with ctrl-z. I defaulted the undo history to 20, can be increased.</p>
+          </div>
+        </details>
+      
+        <details>
+          <summary>Tools & Features</summary>
+          <div>
+            <p>Freedraw tool has brushwidth slider, it does nothing, as with infinite zoom, this presents a problem. We'll get there</p>
+            <p>Simplify lines defaults to on, this reduces the amount of points created, and the line is simplified. Can lead to slightly unexpected lines, but much nicer for coastal lines.</p>
+            <p>Selection tool: when holding shift, rectangular selection is created. When not holding shift, drag will move the selected points. Delete key to delete paths. Shift click on nothing to deselect all.</p>
+            <p>Delete function now prompts for confirmation if deleting more than 5 points, because I may have accidentally deleted hundreds on accident one time. Path selection has since been updated, but just to be safe.</p>
+            <p>Coastal Tool: Once a path is selected, the ENTIRE PATH in which the selected points reside can be subdivided, and displaced.</p>
+            <p>Deleting a large internal section of a coastline, if it intersects itself should resolve the path for you(connecting the points)</p>
+          </div>
+        </details>
 
-    <ul> Info:
-        <li>
-            PROJECT WILL NOT AUTOSAVE UNTIL A SAVE FILE IS CREATED. After that it should autosave every 6 seconds.
-            Projects can be loaded as well.
-
-        </li>
-        <li>General Navigation: MouseWheel click and drag to pan the view.
-        <li>Mousewheel to scroll</li>
-        <li>Map layers a work in progress, objects fading out. Disabled for now for testing purposes</li>
-        <li>Snapshots are created on mouse up. This unables undo with ctrl-z. I defaulted the undo history to 20, can be increased.</li>
-        <li>Don't be ridiculous with the undo, if you think that a certain pattern of behavior might break it, it will. Loading an old document will remove undo history. Calling undo at this point might be sketchy.In the future, autosaves will be stored seperately to prevent backup overriding.</li>
-        </li>
-        <li>Freedraw tool has brushwidth slider, it does nothing, as with infinite zoom, this presents a problem. We'll get there</li>
-        <li>Simplify lines defaults to on, this reduces the amount of points created, and the line is simplified. Can lead to slightly unexpected lines, but much nicer for coastal lines.</li>
-        <li>Selection tool: when holding shift, rectangular selection is created. When not holding shift, drag will move the selected points. Delete key to delete paths.Shift click on nothing to deselect all.</li>
-        <li>Delete function now prompts for confirmation if deleting more than 5 points, because I may have accidentally deleted hundreds on accident one time. Path selection has since been updated, but just to be safe.</li>
-        <li>Coastal Tool: Once a path is selected, the ENTIRE PATH in which the selected points reside can be subdivided, and displaced.</li>
-        <li>Deleting a large internal section of a coastline, if it intersects itself should resolve the path for you(connecting the points)</li>
-    </ul>
+   
 </footer>
 
 </html>

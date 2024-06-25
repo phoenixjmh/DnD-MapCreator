@@ -2,6 +2,7 @@ let autosaveInterval;
 
 async function SaveProject(project, existingPath = null, backup = false) {
   let startInDirectory = await window.api.getSavesFolderPath();
+  console.log(startInDirectory);
   const map_name_label = document.getElementById("map_name_label");
   const jString = project.exportJSON();
 

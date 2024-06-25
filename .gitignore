@@ -85,6 +85,8 @@ dist
 
 # End of https://www.toptal.com/developers/gitignore/api/node
 
+#Electron Forge
+out/
 #User Data(Saves,Backups)
 
 Saves/

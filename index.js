@@ -1,9 +1,9 @@
 const { app, BrowserWindow } = require("electron");
-require("electron-reload")(__dirname);
+// require("electron-reload")(__dirname);
 const path = require("path");
 const fs = require("fs");
 
-const savesFolderPath = path.join(app.getAppPath(), "Saves");
+const savesFolderPath = path.join(app.getPath('userData'), "Saves");
 if (!fs.existsSync(savesFolderPath)) {
   fs.mkdirSync(savesFolderPath);
 }
@@ -29,7 +29,7 @@ function createWindow() {
     win.webContents.send("api-exposed"); // Signal that APIs are ready
   });
   // Open the DevTools automatically if needed:
-  win.webContents.openDevTools();
+  // win.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow);
