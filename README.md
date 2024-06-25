@@ -35,3 +35,10 @@
 * **Coastal Tool:** Allows subdividing and displacing the entire path containing selected points.
 * **Path Resolution:** Deleting a large internal section of a coastline that intersects itself should automatically reconnect the path.
 
+# Installation
+* Download this https://nodejs.org/en/download/prebuilt-installer
+  - This is Node.js, which is a javascript runtime engine that can run offline.
+* After the initial install, a script will run. In a terminal. You'll need to confirm a few things just yes it.
+* Once that's all finished, navigate to the project's Root directory (You're in it right now), and open a terminal
+* "npm install"
+* then, "npm run make"
