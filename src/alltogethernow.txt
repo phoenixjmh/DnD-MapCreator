@@ -1,0 +1,113 @@
+index.js:
+const { app, BrowserWindow } = require("electron");
+require("electron-reload")(__dirname);
+const path = require("path");
+
+console.log(__dirname);
+function createWindow() {
+  const win = new BrowserWindow({
+    width: 1200, // Adjust to your preferred size
+    height: 800,
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+      sandbox: false,
+      nodeIntegration: true,
+      contextIsolation: true,
+    },
+  });
+
+  win.loadFile(path.join(__dirname, "src", "index.html"));
+
+  win.webContents.once("dom-ready", () => {
+    win.webContents.send("api-exposed"); // Signal that APIs are ready
+  });
+  // Open the DevTools automatically if needed:
+  win.webContents.openDevTools();
+}
+
+app.whenReady().then(createWindow);
+
+// Other lifecycle events (optional)
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") app.quit();
+});
+
+app.on("activate", () => {
+  if (BrowserWindow.getAllWindows().length === 0) createWindow();
+});
+
+const { ipcMain } = require("electron");
+
+ipcMain.on("get-path", (event, name) => {
+  console.log(name);
+  event.returnValue = app.getPath(name);
+});
+
+
+preload.js:
+
+const { contextBridge, ipcRenderer,app } = require("electron");
+const path = require('path');
+
+contextBridge.exposeInMainWorld("api", {
+  send: (channel, data) => ipcRenderer.send(channel, data),
+  receive: (channel, func) =>
+    ipcRenderer.on(channel, (event, ...args) => func(...args)),
+  // Expose other Node.js modules or functions as needed:
+  getPathSync: (name) => ipcRenderer.sendSync('get-path', name),
+  pathJoin: (...args) => path.join(...args), 
+});
+
+Appstate.js(renderer):
+
+
+  async function SaveProject(project, existingHandle = null, backup = false) {
+    const map_name_label = document.getElementById("map_name_label");
+    const jString = project.exportJSON();
+  
+    let handle = existingHandle;
+    let originalFileName; // Variable to store the original filename
+  
+    if (!handle) {
+      // Initial save - get the filename for future use
+      handle = await window.showSaveFilePicker({
+        // ... your existing file picker options ...
+      });
+      originalFileName = handle.name.split(".").shift(); // Store original filename without extension
+    }
+  
+    // Create the autosave filename
+    const autosaveFileName = `${
+      originalFileName || map_name_label.textContent
+    }(autosave).DMAP`;
+    console.log("emitting get-path event");
+    const autosaveFilePath = window.api.pathJoin(await window.api.getPathSync('userData'), autosaveFileName);
+    console.log(autosaveFileName);
+  
+    try {
+      fs.writeFileSync(autosaveFilePath, jString);
+      console.log("Autosaved project:", autosaveFileName);
+    } catch (err) {
+      console.error("Error autosaving project:", err);
+    }
+  
+    if (!existingHandle) {
+      // Set up the interval for subsequent autosaves
+      setInterval(async () => await SaveProject(project, handle), 60000); // 60 seconds interval
+    }
+  
+    // If this is the initial save, save the original file too
+    if (!existingHandle) {
+      const writable = await handle.createWritable();
+      await writable.write(jString);
+      await writable.close();
+  
+      const fileName = handle.name.split(".").shift();
+      map_name_label.textContent = fileName;
+    }
+  }
+
+
+
+
+  I'm getting the error fs is not defined. This is an electron app, as you can tell. I cannot use require(fs) here, because it is a renderer process, so I need to use ipc to effectively use this module. Please consider all aspects of my code, and everything I had said here and provide a solution.
