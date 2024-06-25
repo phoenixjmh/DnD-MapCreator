@@ -1,96 +1,99 @@
 let autosaveInterval;
-async function SaveProject(project, existingHandle = null, backup = false) {
+
+async function SaveProject(project, existingPath = null, backup = false) {
   let startInDirectory = await window.api.getSavesFolderPath();
-  console.log(startInDirectory)
   const map_name_label = document.getElementById("map_name_label");
   const jString = project.exportJSON();
 
-  let handle = existingHandle;
-  let originalFileName; // Variable to store the original filename
+  let originalFileName;
+  let filePath = existingPath; // Store the chosen file path
 
-  if (!handle) {
-    // Initial save - get the filename for future use
-    handle = await window.showSaveFilePicker({
-      suggestedName: map_name_label.textContent,
-      defaultPath:await startInDirectory,
-      types: [
-        {
-          description: "DNDMAP_PROJECT",
-          accept: { "application/json": [".DMAP"] },
-        },
-      ],
-    });
+  if (!existingPath) {
+    // Show the save dialog (use the exposed API)
+    const result = await window.api.showSaveDialog(
+      startInDirectory,
+      map_name_label.textContent
+    );
+
+    if (!result.canceled) {
+      filePath = result.filePath;
+      originalFileName = filePath.split("\\").pop().split(".").shift();
+    } else {
+      return; // User canceled the dialog
+    }
+  } else {
+    // Extract filename without extension from existing path
+    originalFileName = filePath.split("\\").pop().split(".").shift();
   }
-  originalFileName = handle.name.split(".").shift();
-  console.log(originalFileName);
 
-  const timestamp = new Date().toISOString().replace(/[-:.]/g, ""); // Format: YYYYMMDDTHHMMSS
-
-  // Create the autosave filename with timestamp
+  const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
   const autosaveFileName = `${
     originalFileName || map_name_label.textContent
   }(autosave)_${timestamp}.DMAP`;
-  console.log("emitting get-path event");
+  console.log(autosaveFileName, "AUTOSAVEFILENAME");
   const autosaveFilePath = window.api.pathJoin(
     await window.api.getSavesFolderPath().concat("\\Backups"),
     autosaveFileName
   );
-  console.log(autosaveFileName);
 
   try {
-    await window.api.saveProject(autosaveFilePath, jString); // Use exposed API
-    console.log("Autosaved project:", autosaveFileName);
+    await window.api.saveProject(autosaveFilePath, jString);
   } catch (err) {
     console.log("Error autosaving project:", err);
   }
 
-  if (!existingHandle) {
+  if (!existingPath) {
     // Set up the interval for subsequent autosaves
     autosaveInterval = setInterval(
-      async () => await SaveProject(project, handle),
+      async () => await SaveProject(project, filePath),
       60000
-    ); // 60 seconds interval
-  }
+    );
 
-  // If this is the initial save, save the original file too
-  if (!existingHandle) {
-    const writable = await handle.createWritable();
-    await writable.write(jString);
-    await writable.close();
+    map_name_label.textContent = originalFileName;
 
-    const fileName = handle.name.split(".").shift();
-    map_name_label.textContent = fileName;
+    try {
+      await window.api.saveProject(filePath, jString); // Save the initial file
+    } catch (err) {
+      console.log("Error saving project:", err);
+    }
   }
 }
+
 function stopAutosaving() {
   clearInterval(autosaveInterval);
   autosaveInterval = null;
 }
 //
-
 async function LoadProject(project) {
   stopAutosaving();
-  const [handle] = await window.showOpenFilePicker({
-    types: [
-      {
-        description: "DNDMAP_PROJECT",
-        accept: { "application/json": [".DMAP"] },
-      },
-    ],
-  });
-  setInterval(async () => await SaveProject(project, handle), 6000);
-  const file = await handle.getFile();
-  const contents = await file.text();
-  project.clear();
-  project.importJSON(contents);
-  //update map title
 
-  const map_name_label = document.getElementById("map_name_label");
-  const fileName = file.name.split(".").shift();
+  const startInDirectory = await window.api.getSavesFolderPath();
+  const result = await window.api.showOpenDialog(startInDirectory);
 
-  console.log(fileName);
-  map_name_label.textContent = fileName;
+  if (!result.canceled && result.filePaths.length > 0) {
+    const filePath = result.filePaths[0];
+
+    // Read file contents using IPC
+    const contents = await window.api.readFile(filePath);
+
+    if (contents) {
+      // Check if reading was successful
+      project.clear();
+      project.importJSON(contents);
+
+      const map_name_label = document.getElementById("map_name_label");
+      const fileName = filePath.split("\\").pop().split(".").shift();
+      map_name_label.textContent = fileName;
+
+      // Set autosave interval
+      autosaveInterval=setInterval(async () => await SaveProject(project, filePath), 60000);
+    } else {
+      // Handle the error (e.g., show a dialog to the user)
+      console.error("Failed to load project file.");
+    }
+  }
 }
+
 
 let projectSnapshots = [];
 let undoneChanges = [];

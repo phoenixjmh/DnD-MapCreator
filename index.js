@@ -7,8 +7,8 @@ const savesFolderPath = path.join(app.getAppPath(), "Saves");
 if (!fs.existsSync(savesFolderPath)) {
   fs.mkdirSync(savesFolderPath);
 }
-const backupsFolderPath=path.join(savesFolderPath,"Backups");
-if(!fs.existsSync(backupsFolderPath)){
+const backupsFolderPath = path.join(savesFolderPath, "Backups");
+if (!fs.existsSync(backupsFolderPath)) {
   fs.mkdirSync(backupsFolderPath);
 }
 function createWindow() {
@@ -43,7 +43,7 @@ app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
 
-const { ipcMain,dialog } = require("electron");
+const { ipcMain, dialog } = require("electron");
 
 ipcMain.on("get-path", (event, name) => {
   console.log(name);
@@ -63,4 +63,31 @@ ipcMain.on("save-project", async (event, data) => {
 
 ipcMain.on("get-saves-folder-path", (event) => {
   event.returnValue = savesFolderPath;
+});
+
+ipcMain.on("show-save-dialog", async (event, defaultPath, suggestedName) => {
+  const result = await dialog.showSaveDialog({
+    defaultPath: path.join(defaultPath, suggestedName + ".DMAP"),
+    filters: [{ name: "DNDMAP_PROJECT", extensions: ["DMAP"] }],
+  });
+  event.returnValue = result; // Send the result back to the renderer
+});
+
+ipcMain.on('show-open-dialog', async (event, defaultPath) => {
+  const result = await dialog.showOpenDialog({
+      defaultPath,
+      properties: ['openFile'], 
+      filters: [{ name: 'DNDMAP_PROJECT', extensions: ['DMAP'] }],
+  });
+  event.returnValue = result; 
+});
+
+ipcMain.on('read-file', async (event, filePath) => {
+  try {
+      const contents = await fs.promises.readFile(filePath, 'utf-8');
+      event.returnValue = contents; // Send the file contents back
+  } catch (err) {
+      console.error('Error reading file:', err);
+      event.returnValue = null; // Or send an error message if needed
+  }
 });

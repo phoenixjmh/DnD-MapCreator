@@ -17,4 +17,13 @@ contextBridge.exposeInMainWorld("api", {
     });
   },
   getSavesFolderPath:()=>ipcRenderer.sendSync('get-saves-folder-path'),
+  showSaveDialog: (defaultPath, suggestedName) => {
+    return ipcRenderer.sendSync('show-save-dialog', defaultPath, suggestedName);
+},
+showOpenDialog: (defaultPath) => {
+  return ipcRenderer.sendSync('show-open-dialog', defaultPath);
+},
+readFile: (filePath) => {
+  return ipcRenderer.sendSync('read-file', filePath);
+},
 });
