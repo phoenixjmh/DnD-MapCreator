@@ -63,3 +63,4 @@ function DEBUG_CLEAR_CIRCLES() {
 }
 
 paper.setup("myCanvas");
+const canvas=document.getElementById('myCanvas');

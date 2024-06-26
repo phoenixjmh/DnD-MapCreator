@@ -1,150 +1,99 @@
-/* 
-#myCanvas{
-    width:100%;
-    height:500px;
-    border: 1px solid black;
-
-}
-.toolbar{
-display:flex;
-/* flex-direction: column; 
-justify-content: center;
-align-items: center;
-border: 1px solid red;
-
-}
-.app-container{
-    display:flex;
-    flex-direction:column;
-    justify-content: center;
-    align-items:center;
-}
-.tool{
-    padding:10px;
-    font-size:0.7rem;
+/* General Styling */
+:root {
+  --primary-color: #2196F3;    /* Blue accent for buttons, etc. */
+  --background-color: #263238;  /* Dark background */
+  --panel-color: #37474F;       /* Slightly lighter for panels */
+  --text-color: #ECEFF1;       /* Light text for contrast */
 }
 
-.tool-info{
-    display:flex;
-    font-size:.7rem;
-    flex-direction: column;
-    width:60%;
-    align-items: center;
-    border: 2px solid grey;
-    border-radius :.6rem;
-    justify-content: space-evenly;
-    padding:1rem;
-    background-color: blanchedalmond;
+body {
+  width: 100%;
+  height: 100vh;  /* Use viewport height */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+  margin: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  overflow: auto; /* Prevent scrollbars on the body */
 }
-#stroke-width-slider{
-    width:90%;
-    height:7px;
-    padding:1rem;
+
+/* Main Container */
+#app-container {
+  display: flex;
+  height: calc(100vh - 3rem);  /* Account for footer */
+  padding: 1rem;
 }
-#simplify-checkbox{
-    border:1px solid green;
-} */
+
+/* Main Panel (Canvas Area) */
+#main-panel {
+  flex: 1;  /* Takes up remaining space */
+  min-width: 0;  /* Allow content to shrink */
+  overflow: auto; /* Show scrollbar if content overflows */
+}
 
 #myCanvas {
   width: 100%;
-  height: 500px;
-  border: 1px solid #ccc; /* Softer border color */
+  height: calc(100% - 3rem);  /* Adjust for title bar */
+  border: 1px solid #455A64;  /* Subtler border */
+    background-color:white;
+}
+
+#project_title_container {
+  text-align: center;
+  padding: 0.5rem;
+  border-bottom: 1px solid #455A64;  
+}
+
+#map_name_label {
+  font-size: 1.2rem;
+}
+
+#zoom_level_display {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  padding: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.5);  /* Semi-transparent */
+  border-radius: 5px;
+}
+
+/* Side Panel (Tools) */
+#sidepanel {
+  width: 10rem;  /* Fixed width for side panel */
+  margin-left: 1rem;
+    margin-top:2.5rem;
+  background-color: var(--panel-color);
+  border-radius: 0.5rem;
+  overflow-y: auto; /* Show scrollbar if tools overflow */
 }
 
 .toolbar {
-  display: flex;
-  justify-content: space-around; /* Evenly distribute tools */
-  align-items: center;
-  background-color: #f4f4f4; /* Light background */
-  padding: 10px;
-}
-
-.app-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  padding: 1rem;
 }
 
 .tool {
-  margin: 5px; /* Give tools some breathing room */
-  cursor: pointer; /* Indicate interactivity */
-  text-align: center; /* Center the label */
+  display: block;
+  padding: 0.8rem;
+  margin-bottom: 0.5rem;
+  background-color: #455A64; /* Slightly darker background for tools */
+  color: var(--text-color);
+  text-align: center;
+  border-radius: 0.3rem;
+  text-decoration: none;
+  transition: background-color 0.2s; /* Smooth hover effect */
+    font-size:.8rem;
+}
+
+.tool:hover {
+  background-color: var(--primary-color);
 }
 
 .tool-info {
-  display: flex;
-  flex-direction: column;
-  width: 300px; /* Specific width */
-  margin-top: 20px;
-  border: 1px solid #ddd; /* Subtle border */
-  border-radius: 8px;
-  padding: 15px;
-  background-color: white;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  padding: 1rem;
+    border-top:1px solid  var(--text-color);
 }
 
-.tool-info > * {
-  margin-bottom: 10px; /* Space between elements */
-}
-
-.tool-info label {
-  font-weight: bold;
-}
-
-.tool-info input[type="range"] {
-  width: calc(100% - 20px); /* Account for padding */
-}
-
-.tool-info button {
-  background-color: #007bff; /* Primary color */
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.tool-info button:hover {
-  background-color: #0056b3; /* Darker on hover */
-}
-
-/* FOOTER */
-footer {
-  background-color: #f0f0f0;
-  padding: 1.25rem; /* 20px */
-  font-family: sans-serif;
-}
-
-details {
-  margin-bottom: 0.9375rem; /* 15px */
-}
-
-summary {
-  font-weight: bold;
-  cursor: pointer;
-  outline: none;
-}
-
-summary:hover,
-summary:focus {
-  text-decoration: underline;
-}
-
-/* Electron-specific adjustments for summary arrow */
-summary::-webkit-details-marker {
-  display: none;
-}
-
-details > summary::before {
-  
-  font-size: 0.75rem; /* 12px */
-  margin-right: 0.5rem;
-}
-
-
-
-div {
-  padding: 0.625rem 0; /* 10px 0 */
-  line-height: 1.6;
+/* Range Slider */
+input[type="range"] {
+  width: 100%;
+  margin-top: 0.5rem;
 }
