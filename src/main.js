@@ -5,6 +5,24 @@ import { SelectionTool } from "./SelectionTool.js";
 import { DotLabelTool } from "./DotLabelTool.js";
 
 
+
+
+
+
+
+
+window.api.onNewProject(()=>{
+    console.log("NEW HELLO!");
+    NewProject(paper.project);
+});
+window.api.onSaveProject(()=>{
+    SaveProject(paper.project);
+});
+
+window.api.onLoadProject(()=>{
+    LoadProject(paper.project);
+});
+
 //******************************* */
 //      ZOOM CONTROLS
 //******************************* */
@@ -224,16 +242,7 @@ let CreateAndAssignTools = (function() {
     dotlabel_tool_button.onclick = (e) => Tools_DotLabel.activate();
 })();
 
-/////////////////////
-//  SAVE PROJECT
-/////////////////////
-const save_button = document.getElementById("save-project-button");
-save_button.onclick = (e) => SaveProject(paper.project);
-
-const load_button = document.getElementById("load-project-button");
-load_button.onclick = (e) => LoadProject(paper.project);
-
-////////////////////
+//////////////////// .
 //  KEY LISTENERS
 ////////////////////
 

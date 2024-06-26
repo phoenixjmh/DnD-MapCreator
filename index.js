@@ -13,8 +13,9 @@ if (!fs.existsSync(backupsFolderPath)) {
     fs.mkdirSync(backupsFolderPath);
 }
 
+let win;
 function createWindow() {
-    const win = new BrowserWindow({
+    win = new BrowserWindow({
         width: 1200, // Adjust to your preferred size
         height: 800,
         webPreferences: {
@@ -30,12 +31,34 @@ function createWindow() {
             label: 'File',
             submenu: [
                 {
+                    label: 'New Project',
+                    click: () => {
+
+                        win.webContents.send('trigger-new-project');
+                    }
+                },
+
+                {
+                    label: 'Save Project',
+                    click: () => {
+
+                        win.webContents.send('trigger-save-project');
+                    }
+                },
+                {
+                    label: 'Load Project',
+                    click: () => {
+
+                        win.webContents.send('trigger-load-project');
+                    }
+                    },
+                {
                     label: 'Export as PNG',
                     click: () => {
 
                         win.webContents.send('exportAsPNG');
                     }
-                }
+                },
             ]
         },
         {  // New "Developer" submenu
@@ -150,7 +173,4 @@ ipcMain.on("exportAsPNG-data", async (event, dataURL) => {
     }
 });
 
-ipcMain.on('print-value', (_event, value) => {
-    console.log(value)
-})
-
+ipcMain.on('new-project-destructive', () => win.webContents.reload());
