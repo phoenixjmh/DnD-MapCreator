@@ -2,7 +2,6 @@ let autosaveInterval;
 
 async function SaveProject(project, existingPath = null, backup = false) {
   let startInDirectory = await window.api.getSavesFolderPath();
-  console.log(startInDirectory);
   const map_name_label = document.getElementById("map_name_label");
   const jString = project.exportJSON();
 
@@ -18,13 +17,14 @@ async function SaveProject(project, existingPath = null, backup = false) {
 
     if (!result.canceled) {
       filePath = result.filePath;
-      originalFileName = filePath.split("\\").pop().split(".").shift();
+      originalFileName =await window.api.getStrippedFileName(filePath);
     } else {
       return; // User canceled the dialog
     }
   } else {
-    // Extract filename without extension from existing path
-    originalFileName = filePath.split("\\").pop().split(".").shift();
+    // Extract filename without extension from existing path(windows style)
+    originalFileName = await window.api.getStrippedFileName(filePath);
+            //filePath.split("\\").pop().split(".").shift();
   }
 
   const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
@@ -33,7 +33,7 @@ async function SaveProject(project, existingPath = null, backup = false) {
   }(autosave)_${timestamp}.DMAP`;
   console.log(autosaveFileName, "AUTOSAVEFILENAME");
   const autosaveFilePath = window.api.pathJoin(
-    await window.api.getSavesFolderPath().concat("\\Backups"),
+    await window.api.getBackupsFolderPath(),
     autosaveFileName
   );
 

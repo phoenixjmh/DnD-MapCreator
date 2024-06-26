@@ -1,5 +1,5 @@
 const { app, BrowserWindow } = require("electron");
-// require("electron-reload")(__dirname);
+ require("electron-reload")(__dirname);
 const path = require("path");
 const fs = require("fs");
 
@@ -7,10 +7,12 @@ const savesFolderPath = path.join(app.getPath('userData'), "Saves");
 if (!fs.existsSync(savesFolderPath)) {
   fs.mkdirSync(savesFolderPath);
 }
+
 const backupsFolderPath = path.join(savesFolderPath, "Backups");
 if (!fs.existsSync(backupsFolderPath)) {
   fs.mkdirSync(backupsFolderPath);
 }
+
 function createWindow() {
   const win = new BrowserWindow({
     width: 1200, // Adjust to your preferred size
@@ -63,6 +65,9 @@ ipcMain.on("save-project", async (event, data) => {
 
 ipcMain.on("get-saves-folder-path", (event) => {
   event.returnValue = savesFolderPath;
+});
+ipcMain.on("get-backups-folder-path",(event)=>{
+    event.returnValue=backupsFolderPath;
 });
 
 ipcMain.on("show-save-dialog", async (event, defaultPath, suggestedName) => {

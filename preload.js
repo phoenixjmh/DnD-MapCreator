@@ -1,6 +1,7 @@
 
 const { contextBridge, ipcRenderer,app } = require("electron");
 const path = require('path');
+const {basename, extname} = require('path');
 
 contextBridge.exposeInMainWorld("api", {
   send: (channel, data) => ipcRenderer.send(channel, data),
@@ -9,6 +10,7 @@ contextBridge.exposeInMainWorld("api", {
   // Expose other Node.js modules or functions as needed:
   getPathSync: (name) => ipcRenderer.sendSync('get-path', name),
   pathJoin: (...args) => path.join(...args), 
+  getStrippedFileName:(filePath)=> basename(filePath,extname(filePath)),
   saveProject: async (filePath, projectData) => {
     ipcRenderer.send("save-project", { filePath, projectData });
     return new Promise((resolve, reject) => {
@@ -17,9 +19,12 @@ contextBridge.exposeInMainWorld("api", {
     });
   },
   getSavesFolderPath:()=>ipcRenderer.sendSync('get-saves-folder-path'),
+  getBackupsFolderPath:()=>ipcRenderer.sendSync('get-backups-folder-path'),
   showSaveDialog: (defaultPath, suggestedName) => {
     return ipcRenderer.sendSync('show-save-dialog', defaultPath, suggestedName);
 },
+
+
 showOpenDialog: (defaultPath) => {
   return ipcRenderer.sendSync('show-open-dialog', defaultPath);
 },
