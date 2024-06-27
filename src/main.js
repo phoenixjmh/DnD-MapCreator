@@ -3,6 +3,8 @@ import { FreeDrawTool } from "./FreeDrawTool.js";
 import { CoastalTool } from "./CoastalTool.js";
 import { SelectionTool } from "./SelectionTool.js";
 import { DotLabelTool } from "./DotLabelTool.js";
+import { PolygonalTool } from "./PolygonalLineTool.js"
+import { Viewport } from "./ZoomLayers.js";
 
 
 
@@ -11,98 +13,23 @@ import { DotLabelTool } from "./DotLabelTool.js";
 
 
 
-window.api.onNewProject(()=>{
+
+
+window.api.onNewProject(() => {
     console.log("NEW HELLO!");
     NewProject(paper.project);
 });
-window.api.onSaveProject(()=>{
+window.api.onSaveProject(() => {
     SaveProject(paper.project);
 });
 
-window.api.onLoadProject(()=>{
+window.api.onLoadProject(() => {
     LoadProject(paper.project);
 });
 
 //******************************* */
 //      ZOOM CONTROLS
 //******************************* */
-
-
-let currentZoomLevel = 0;
-let zoom_level_display = document.getElementById("zoom_level_display");
-zoom_level_display.textContent = "Zoom Level:";
-
-canvas.addEventListener("wheel", function(event) {
-    event.preventDefault();
-    let zoomFactor = 1 - event.deltaY / 1000;
-
-    //cap zoom in
-    if (currentZoomLevel == 100 && zoomFactor > 1) {
-        return;
-    }
-    if (zoomFactor > 1) {
-        currentZoomLevel += 1;
-        zoomFactor = 1.1;
-    } else if (zoomFactor < 1) {
-        zoomFactor = 0.9;
-        currentZoomLevel -= 1;
-    }
-    // MapLayerHandler(currentZoomLevel);
-
-    zoom_level_display.textContent = currentZoomLevel;
-
-    const viewPos = paper.view.center;
-    const scalingFactor = new paper.Point(zoomFactor, zoomFactor);
-
-    paper.project.activeLayer.scale(scalingFactor, viewPos); // Scale
-
-    paper.view.update();
-});
-
-//////////////////////////////
-
-//  PAN AND SCAN
-
-/////////////////////////////
-let lastPoint = null;
-
-// Listen for mousedown event
-paper.view.onMouseDown = function(event) {
-    if (event.event.which === 2) {
-        // Middle mouse button
-        lastPoint = new paper.Point(event.point);
-    }
-};
-
-// Listen for mousemove event
-paper.view.onMouseDrag = function(event) {
-    if (lastPoint) {
-        const delta = lastPoint.subtract(event.point);
-        paper.view.scrollBy(delta);
-        lastPoint = event.point.add(delta);
-    }
-};
-
-// Listen for mouseup event
-paper.view.onMouseUp = function(event) {
-    lastPoint = null;
-};
-
-function MapLayerHandler(zoom_level) {
-    //testing purposes, brute force set the map layer to all tools
-    LineTool.setMapLayer(zoom_level);
-    FreeDrawTool.setMapLayer(zoom_level);
-    DotLabelTool.setMapLayer(zoom_level);
-    AllPathObjects.forEach((val) => {
-        let { path, mapLayer, isDotLabel } = val;
-        if (mapLayer - currentZoomLevel > 30 || currentZoomLevel - mapLayer > 30) {
-            path.visible = false;
-            console.log("Zoom out of scope");
-        } else {
-            path.visible = true;
-        }
-    });
-}
 
 let stroke_width_slider = document.getElementById("stroke-width-slider");
 
@@ -111,15 +38,18 @@ stroke_width_slider.addEventListener("input", function() {
 });
 
 let CreateAndAssignTools = (function() {
-    var Tools_Selection = new paper.Tool();
+    var Tools_Polygonal = new paper.Tool();
 
-    var Tools_Coastal = new paper.Tool();
+    var Tools_Selection = new paper.Tool();
 
     var Tools_FreeDraw = new paper.Tool();
 
     var Tools_Line = new paper.Tool();
 
     var Tools_DotLabel = new paper.Tool();
+
+    Tools_Polygonal.onMouseMove = PolygonalTool.onMouseMove;
+    Tools_Polygonal.onMouseDown = PolygonalTool.onMouseDown;
 
     Tools_Selection.onMouseDown = SelectionTool.onMouseDown;
     Tools_Selection.onMouseDrag = SelectionTool.onMouseDrag;
@@ -133,10 +63,6 @@ let CreateAndAssignTools = (function() {
     Tools_FreeDraw.onMouseDown = FreeDrawTool.onMouseDown;
     Tools_FreeDraw.onMouseDrag = FreeDrawTool.onMouseDrag;
 
-    Tools_Coastal.onMouseDown = CoastalTool.onMouseDown;
-    Tools_Coastal.onMouseDrag = CoastalTool.onMouseDrag;
-    Tools_Coastal.onMouseUp = CoastalTool.onMouseUp;
-
     Tools_DotLabel.onMouseDown = DotLabelTool.onMouseDown;
     Tools_DotLabel.onMouseUp = DotLabelTool.onMouseUp;
 
@@ -145,9 +71,9 @@ let CreateAndAssignTools = (function() {
         Tools_Selection.activate();
 
     };
+    Viewport.Init();
 
     function SelectCoastlineTool() {
-        Tools_Coastal.activate();
 
         /////////////////////////
         //  CREATE DIVISION BAR
@@ -156,78 +82,79 @@ let CreateAndAssignTools = (function() {
         let tool_properties_panel = document.querySelector(".tool-info");
         tool_properties_panel.innerHTML = ""; // Clear existing content
 
-        const subdivideButton = Object.assign(document.createElement("button"), {
-            id: "subdivide-button",
-            textContent: "Subdivide",
+        let fractalize_button = Object.assign(document.createElement("button"), {
+            id: "fractalize_button",
+            textContent: "Fractalize",
         });
-
-        tool_properties_panel.append(subdivideButton);
-        subdivideButton.onclick = (e) => {
-            let success = CoastalTool.Subdivide();
-            if (success === -1) {
-                alert("No line selected to modify");
-            }
-        };
-
-        const NoiseLabel = Object.assign(document.createElement("label"), {
-            textContent: "Noise:0",
-            for: "noise-slider", // Associate label with input
-        });
-
-        const NoiseSlider = Object.assign(document.createElement("input"), {
+        let fractalize_intensity_slider = Object.assign(document.createElement("input"), {
             type: "range",
-            min: 0,
-            max: 100,
+            min: 0.1,
+            max: 70,
             step: 1,
+            id: "fractalize_intensity_slider",
             value: 1,
-            id: "noise-slider",
+        });
+        let fractalize_intensity_slider_label = Object.assign(document.createElement("label"), {
+            for: "fractalize_intensity_slider",
+            textContent: `Strength:${fractalize_intensity_slider.value}`
+        });
+        let fractalize_automated_checkbox_label = Object.assign(document.createElement("label"), {
+            for: "fractalize_automated_checkbox",
+            textContent: "Automated"
+        });
+        let fractalize_automated_checkbox = Object.assign(document.createElement("input"), {
+            type: "checkbox",
+            textContent: "Automated Intensity",
+            id: 'fractalize_automated_checkbox'
+        });
+        let fractalize_controls = Object.assign(document.createElement("div"), {
+            id: 'fractalize_controls',
+
         });
 
-        const AddNoiseButton = Object.assign(document.createElement("button"), {
-            textContent: "Add Noise",
-            id: "add-noise-button",
-        });
-        AddNoiseButton.onclick = (e) => {
-            let noiseIntensity = NoiseSlider.value;
-            let success = CoastalTool.AddNoise(noiseIntensity);
-            if (success === -1) {
-                alert("No line selected to modify");
-                NoiseSlider.value = 0;
-                NoiseLabel.textContent = `Noise ${NoiseSlider.value}`;
+
+        fractalize_intensity_slider.addEventListener("input", (e) => fractalize_intensity_slider_label.textContent = `Strength: ${e.target.value}`);
+
+        fractalize_automated_checkbox.addEventListener("input", (e) => {
+            if (fractalize_automated_checkbox.checked == true) {
+                fractalize_controls.innerHTML = '';
+                fractalize_controls.append(fractalize_automated_checkbox_label, fractalize_automated_checkbox, fractalize_button)
             }
-        };
-
-        tool_properties_panel.append(NoiseLabel, NoiseSlider, AddNoiseButton);
-
-        NoiseSlider.addEventListener("input", (e) => {
-            NoiseLabel.textContent = `Noise ${e.target.value}`;
+            if (fractalize_automated_checkbox.checked == false) {
+                fractalize_controls.innerHTML = '';
+                fractalize_controls.append(fractalize_automated_checkbox_label, fractalize_automated_checkbox, fractalize_intensity_slider_label, fractalize_intensity_slider, fractalize_button);
+            }
         });
 
-        CoastalTool.SetDrawMode("FREEDRAW");
+        fractalize_controls.append(fractalize_automated_checkbox_label, fractalize_automated_checkbox, fractalize_intensity_slider_label, fractalize_intensity_slider, fractalize_button);
 
-        const clean_intersection_button = Object.assign(
-            document.createElement("button"),
-            {
-                id: "clean_intersection_button",
-                textContent: "Clean Intersections",
-            }
-        );
+        tool_properties_panel.append(fractalize_controls);
 
-        clean_intersection_button.onclick = (e) => {
+        fractalize_button.onclick = (e) => {
             e.preventDefault();
-            CoastalTool.CleanIntersections();
-        };
+            if (fractalize_automated_checkbox.checked == true)
+                CoastalTool.Fractalize(true);
+
+            else
+                CoastalTool.Fractalize(false, fractalize_intensity_slider.value);
+        }
+
+
+
 
         tool_info_panel.append(
             simplify_checkbox_label,
             simplify_checkbox,
-            clean_intersection_button
+            //clean_intersection_button
         );
     }
 
     ///////////////////////
     //  ASSIGN BUTTONS
     //////////////////////
+
+    let polygonal_tool_button = document.querySelector("#polygonal-tool-button");
+    polygonal_tool_button.onclick = (e) => Tools_Polygonal.activate();
 
     let line_tool_button = document.querySelector("#line_tool_button");
     line_tool_button.onclick = (e) => Tools_Line.activate();
