@@ -4,6 +4,7 @@ import { CoastalTool } from "./CoastalTool.js";
 import { SelectionTool } from "./SelectionTool.js";
 import { DotLabelTool } from "./DotLabelTool.js";
 import { PolygonalTool } from "./PolygonalLineTool.js"
+import {TextTool} from "./TextTool.js"
 import { Viewport } from "./ZoomLayers.js";
 
 
@@ -48,6 +49,9 @@ let CreateAndAssignTools = (function() {
 
     var Tools_DotLabel = new paper.Tool();
 
+    var Tools_AddLabels= new paper.Tool();
+
+
     Tools_Polygonal.onMouseMove = PolygonalTool.onMouseMove;
     Tools_Polygonal.onMouseDown = PolygonalTool.onMouseDown;
 
@@ -65,6 +69,8 @@ let CreateAndAssignTools = (function() {
 
     Tools_DotLabel.onMouseDown = DotLabelTool.onMouseDown;
     Tools_DotLabel.onMouseUp = DotLabelTool.onMouseUp;
+
+    Tools_AddLabels.onMouseDown=TextTool.onMouseDown;
 
     let selection_tool_button = document.querySelector("#selection_tool_button");
     selection_tool_button.onclick = function() {
@@ -167,6 +173,9 @@ let CreateAndAssignTools = (function() {
 
     let dotlabel_tool_button = document.querySelector("#dotlabel_tool_button");
     dotlabel_tool_button.onclick = (e) => Tools_DotLabel.activate();
+
+    let text_tool_button = document.querySelector("#text_tool_button");
+    text_tool_button .onclick = (e) => Tools_AddLabels.activate();
 })();
 
 //////////////////// .

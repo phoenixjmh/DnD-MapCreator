@@ -29,6 +29,7 @@
                 <a class='tool' id='coastal_tool_button' href="#">Coastline Tool</a>
                 <a class='tool' id='selection_tool_button' href="#">Selection Tool</a>
                 <a class='tool' id='dotlabel_tool_button' href="#">Dot & Label Tool</a>
+                <a class='tool' id='text_tool_button' href="#">Add Labels</a>
 
             </div>
             <div class='tool-info'>
@@ -38,6 +39,10 @@
             </div>
         </div>
     </div>
+    <dialog id='add-text-dialog'>
+        <input type="text" id='add-text-input',placeholder="Enter your text">
+        <button id='confirm-text-input-button'>Add</button>
+    </dialog>
     <script src="Common.js"></script>
     <script src="AppState.js"></script>
     <script type="module" src="main.js"></script>
