@@ -49,6 +49,7 @@ var SelectionTool = (function() {
         if (selectionRectangle) {
             //select points within the rectangle
             selectPointsWithinRectangle();
+            selectTextWithinRectangle();
             selectionRectangle.remove();
             selectionRectangle = null;
         }
@@ -75,13 +76,19 @@ var SelectionTool = (function() {
         if (!hit) deselectAllPoints();
     }
 
-    function GetAllSelectionBoundingBoxes() {
-        let allSelectionBoxes = paper.project.getItems({
-            recursive: true,
-            match: (item) => item.data && item.data.isSelectionBox,
-        });
-        return allSelectionBoxes;
-    }
+   function selectTextWithinRectangle() {
+    let hit = false;
+    paper.project.getItems({
+      class: paper.PointText, // Select only PointText items
+    }).forEach((textItem) => {
+      if (selectionRectangle.contains(textItem.position)) {
+        textItem.selected = true;
+        hit = true;
+      } else {
+        textItem.selected = false; 
+      }
+    });
+  }
     function deselectAllPoints() {
         let selectedPoints = GetSelectedSegments();
         if (selectedPoints) {
