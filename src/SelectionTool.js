@@ -1,6 +1,6 @@
 var SelectionTool = (function() {
     let selectionRectangle;
-
+    
     function onMouseDown(event) {
         if (event.event.which !== 1) {
             return;
@@ -11,8 +11,24 @@ var SelectionTool = (function() {
         } else {
             //default to regular moving selection
             selectionRectangle = null;
+
         }
     }
+    function onDoubleClick(event){
+ paper.project.getItems({
+                class: paper.PointText, // Only check PointText items
+            }).forEach((textItem) => {
+                const distance = textItem.position.getDistance(event.point);
+                const thresholdDistance = 10; // Adjust this value as needed
+
+                if (distance <= thresholdDistance) {
+                    textItem.selected = true; // Mark the text as selected (optional)
+                    createTextEditor(textItem);
+                }
+            });
+    }
+
+
     function handleRectangleSelectionStart(point) {
         deselectAllPoints();
         selectionRectangle = new paper.Path.Rectangle({
@@ -76,19 +92,19 @@ var SelectionTool = (function() {
         if (!hit) deselectAllPoints();
     }
 
-   function selectTextWithinRectangle() {
-    let hit = false;
-    paper.project.getItems({
-      class: paper.PointText, // Select only PointText items
-    }).forEach((textItem) => {
-      if (selectionRectangle.contains(textItem.position)) {
-        textItem.selected = true;
-        hit = true;
-      } else {
-        textItem.selected = false; 
-      }
-    });
-  }
+    function selectTextWithinRectangle() {
+        let hit = false;
+        paper.project.getItems({
+            class: paper.PointText, // Select only PointText items
+        }).forEach((textItem) => {
+            if (selectionRectangle.contains(textItem.position)) {
+                textItem.selected = true;
+                hit = true;
+            } else {
+                textItem.selected = false;
+            }
+        });
+    }
     function deselectAllPoints() {
         let selectedPoints = GetSelectedSegments();
         if (selectedPoints) {
@@ -131,6 +147,7 @@ var SelectionTool = (function() {
     return {
         onMouseDown: onMouseDown,
         onMouseDrag: onMouseDrag,
+        onDoubleClick:onDoubleClick,
         onMouseUp: onMouseUp,
         deleteSelectedPoints,
         deleteSelectedPoints,
