@@ -97,3 +97,42 @@ input[type="range"] {
   width: 100%;
   margin-top: 0.5rem;
 }
+/* Fractalize Controls */
+#fractalize_controls {
+  border-top: 1px solid var(--text-color); /* Match tool-info style */
+    display:flex;
+    flex-direction:column;
+    justify-content:space-evenly;
+    align-items:center;
+    padding-top:1rem;
+}
+
+#fractalize_automated_checkbox {
+  margin-bottom: 0.5rem; /* Add some space below the checkbox */
+    border-radius:0.5rem;
+    padding-top:1rem;
+}
+
+/* Strength Label and Slider */
+#fractalize_intensity_slider {
+  vertical-align: middle; /* Align them vertically */
+width:100%;
+}
+
+#strength-value {
+  display: inline-block;
+  width: 50px; /* Adjust as needed */
+  text-align: right;
+}
+#fractalize_button{
+    border-radius:.5rem;
+    background-color:var(--background-color);
+    color:var(--text-color);
+    padding:.8rem;
+    vertical-align:middle;
+}
+#simplify_container{
+    position:absolute;
+    left:83%;
+    top:1rem;
+}
