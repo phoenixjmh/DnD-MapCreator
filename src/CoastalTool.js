@@ -81,12 +81,84 @@ var CoastalTool = (function() {
         }
     }
 
+    function OnActivate(){
+        const toolPropertiesPanel = document.querySelector(".tool-info");
+        toolPropertiesPanel.innerHTML='';
+
+        const fractalizeControls = document.createElement("div");
+        fractalizeControls.id = "fractalize_controls";
+        let checkbox_label=Object.assign(document.createElement("label"),{
+            for:"fractalize_automated_checkbox",
+            textContent:"Automated"
+        });
+
+        let automatedCheckbox = Object.assign(document.createElement("input"), {
+            type: "checkbox",
+            id: "fractalize_automated_checkbox",
+            onchange: (e) => {
+                let isChecked=automatedCheckbox.checked; 
+                if (!isChecked) {
+                    fractalizeControls.innerHTML='';
+                    let strengthValueLabel = Object.assign(document.createElement("label"), {
+                        for: "fractalize_intensity_slider",
+                        textContent: "Strength:",
+                    });
+                    let intensitySlider = Object.assign(document.createElement("input"), {
+                        type: "range",
+                        min: "0.1",
+                        max: "70",
+                        step: "1",
+                        id: "fractalize_intensity_slider",
+                        value: "1",
+                        oninput: (e) => {
+                            strengthValueLabel.textContent = e.target.value;
+                        }
+                    })
+                    let fractalize_button = Object.assign(document.createElement("button"), {
+                        id: "fractalize_button",
+                        textContent: "Fractalize",
+                        onclick: (e) => {
+                            e.preventDefault();
+                            Fractalize(false, intensitySlider.value);
+                        }
+                    });
+                    fractalizeControls.append(strengthValueLabel, intensitySlider, fractalize_button);
+                }
+                else {
+                    fractalizeControls.innerHTML = '';
+                    let fractalize_button = Object.assign(document.createElement("button"), {
+                        id: "fractalize_button",
+                        textContent: "Fractalize",
+                        onclick: (e) => {
+                            e.preventDefault();
+                            Fractalize(true, 0);
+                        }
+                    });
+                    fractalizeControls.append(fractalize_button)
+                }
+
+
+            }
+        })
+
+
+
+        automatedCheckbox.dispatchEvent(new Event('change'));
+        toolPropertiesPanel.append(checkbox_label,automatedCheckbox,fractalizeControls);
+        tool_info_panel.append(simplify_checkbox_label, simplify_checkbox);
+
+    }
+
+
+
+
 
     return {
         setMapLayer: setMapLayer,
         Subdivide: Subdivide,
         AddNoise: AddNoise,
         Fractalize: Fractalize,
+        OnActivate:OnActivate,
     };
 })();
 export { CoastalTool };
