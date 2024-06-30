@@ -50,6 +50,11 @@ var TextTool = (function() {
     }
     function createInitialTextInputField(_point) {
         console.log(_point);
+        if(document.querySelector('#add-label-text-area')){
+            console.log("ALREADY EXISTING TEXT AREA")
+            textEditor.focus();
+            return;
+        }
         let textEditor = document.createElement("textarea");
 
         textEditor.style.fontSize=fontSize;

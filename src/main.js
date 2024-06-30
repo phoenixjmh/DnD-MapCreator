@@ -8,15 +8,15 @@ import { TextTool } from "./TextTool.js";
 import { Viewport } from "./ZoomLayers.js";
 
 window.api.onNewProject(() => {
-  console.log("NEW HELLO!");
-  NewProject(paper.project);
+    console.log("NEW HELLO!");
+    NewProject(paper.project);
 });
 window.api.onSaveProject(() => {
-  SaveProject(paper.project);
+    SaveProject(paper.project);
 });
 
 window.api.onLoadProject(() => {
-  LoadProject(paper.project);
+    LoadProject(paper.project);
 });
 
 //******************************* */
@@ -25,141 +25,156 @@ window.api.onLoadProject(() => {
 
 let stroke_width_slider = document.getElementById("stroke-width-slider");
 
-stroke_width_slider.addEventListener("input", function () {
-  LineTool.setBrushSize(stroke_width_slider.value);
+stroke_width_slider.addEventListener("input", function() {
+    LineTool.setBrushSize(stroke_width_slider.value);
 });
 
-let CreateAndAssignTools = (function () {
-  var Tools_Polygonal = new paper.Tool();
+let CreateAndAssignTools = (function() {
+    var Tools_Polygonal = new paper.Tool();
 
-  var Tools_Selection = new paper.Tool();
+    var Tools_Selection = new paper.Tool();
 
-  var Tools_FreeDraw = new paper.Tool();
+    var Tools_FreeDraw = new paper.Tool();
 
-  var Tools_Line = new paper.Tool();
+    var Tools_Line = new paper.Tool();
 
-  var Tools_DotLabel = new paper.Tool();
+    var Tools_DotLabel = new paper.Tool();
 
-  var Tools_AddLabels = new paper.Tool();
+    var Tools_AddLabels = new paper.Tool();
 
-  Tools_Polygonal.onMouseMove = PolygonalTool.onMouseMove;
-  Tools_Polygonal.onMouseDown = PolygonalTool.onMouseDown;
+    Tools_Polygonal.onMouseMove = PolygonalTool.onMouseMove;
+    Tools_Polygonal.onMouseDown = PolygonalTool.onMouseDown;
 
-  Tools_Selection.onMouseDown = SelectionTool.onMouseDown;
-  Tools_Selection.onDoubleClick = SelectionTool.onDoubleClick;
-  Tools_Selection.onMouseDrag = SelectionTool.onMouseDrag;
-  Tools_Selection.onMouseUp = SelectionTool.onMouseUp;
+    Tools_Selection.onMouseDown = SelectionTool.onMouseDown;
+    Tools_Selection.onDoubleClick = SelectionTool.onDoubleClick;
+    Tools_Selection.onMouseDrag = SelectionTool.onMouseDrag;
+    Tools_Selection.onMouseUp = SelectionTool.onMouseUp;
 
-  Tools_Line.onMouseDown = LineTool.onMouseDown;
-  Tools_Line.onMouseDrag = LineTool.onMouseDrag;
-  Tools_Line.onMouseUp = LineTool.onMouseUp;
+    Tools_Line.onMouseDown = LineTool.onMouseDown;
+    Tools_Line.onMouseDrag = LineTool.onMouseDrag;
+    Tools_Line.onMouseUp = LineTool.onMouseUp;
 
-  Tools_FreeDraw.onMouseUp = FreeDrawTool.onMouseUp;
-  Tools_FreeDraw.onMouseDown = FreeDrawTool.onMouseDown;
-  Tools_FreeDraw.onMouseDrag = FreeDrawTool.onMouseDrag;
+    Tools_FreeDraw.onMouseUp = FreeDrawTool.onMouseUp;
+    Tools_FreeDraw.onMouseDown = FreeDrawTool.onMouseDown;
+    Tools_FreeDraw.onMouseDrag = FreeDrawTool.onMouseDrag;
 
-  Tools_DotLabel.onMouseDown = DotLabelTool.onMouseDown;
-  Tools_DotLabel.onMouseUp = DotLabelTool.onMouseUp;
+    Tools_DotLabel.onMouseDown = DotLabelTool.onMouseDown;
+    Tools_DotLabel.onMouseUp = DotLabelTool.onMouseUp;
 
-  Tools_AddLabels.onMouseDown = TextTool.onMouseDown;
+    Tools_AddLabels.onMouseDown = TextTool.onMouseDown;
 
-  let selection_tool_button = document.querySelector("#selection_tool_button");
-  selection_tool_button.onclick = function () {
-    Tools_Selection.activate();
-  };
-  Viewport.Init();
+    let selection_tool_button = document.querySelector("#selection_tool_button");
+    selection_tool_button.onclick = function() {
+        Tools_Selection.activate();
+    };
+    Viewport.Init();
 
-  function SelectAddLabelTool() {
-    Tools_AddLabels.activate();
-    let tool_properties_panel = document.querySelector(".tool-info");
-    tool_properties_panel.innerHTML = `
+    function SelectAddLabelTool() {
+        Tools_AddLabels.activate();
+        let tool_properties_panel = document.querySelector(".tool-info");
+        tool_properties_panel.innerHTML = `
   <div id="font-controls">
     <label for="font-size">Font Size:</label>
     <input type="number" id="font-size" value="12" min="10" max="100">
   </div>
 `;
-    let font_size_input = document.querySelector("#font-size");
-    font_size_input.onclick = (e) => {
-      e.preventDefault();
-      let fs = e.target.value + "px";
-      TextTool.ChangeFontSize(fs);
-    };
-  }
-
-  function SelectCoastlineTool() {
-    const toolPropertiesPanel = document.querySelector(".tool-info");
-    toolPropertiesPanel.innerHTML = `<label for="fractalize_automated_checkbox">Automated</label>
-             <input type="checkbox" id="fractalize_automated_checkbox">
-                `;
-
-    const fractalizeControls = document.createElement("div");
-    fractalizeControls.id = "fractalize_controls";
-
-    function updateFractalizeControls(showStrength) {
-      fractalizeControls.innerHTML = showStrength
-        ? `
-      <label for="fractalize_intensity_slider">Strength: <span id="strength-value">1</span></label>
-      <input type="range" min="0.1" max="70" step="1" id="fractalize_intensity_slider" value="1">
-    `
-        : `
-    `;
+        
+        let font_size_input = document.querySelector("#font-size");
+        font_size_input.onclick = (e) => {
+            e.preventDefault();
+            let fs = e.target.value + "px";
+            TextTool.ChangeFontSize(fs);
+        };
     }
-    let fractalize_button = Object.assign(document.createElement("button"), {
-      id: "fractalize_button",
-      textContent: "Fractalize",
-    });
+
+    function SelectCoastlineTool() {
+        const toolPropertiesPanel = document.querySelector(".tool-info");
+        toolPropertiesPanel.innerHTML='';
+
+        const fractalizeControls = document.createElement("div");
+        fractalizeControls.id = "fractalize_controls";
+        let checkbox_label=Object.assign(document.createElement("label"),{
+            for:"fractalize_automated_checkbox",
+            textContent:"Automated"
+        });
+
+        let automatedCheckbox = Object.assign(document.createElement("input"), {
+            type: "checkbox",
+            id: "fractalize_automated_checkbox",
+            onchange: (e) => {
+                let isChecked=automatedCheckbox.checked; 
+                if (!isChecked) {
+                    fractalizeControls.innerHTML='';
+                    let strengthValueLabel = Object.assign(document.createElement("label"), {
+                        for: "fractalize_intensity_slider",
+                        textContent: "Strength:",
+                    });
+                    let intensitySlider = Object.assign(document.createElement("input"), {
+                        type: "range",
+                        min: "0.1",
+                        max: "70",
+                        step: "1",
+                        id: "fractalize_intensity_slider",
+                        value: "1",
+                        oninput: (e) => {
+                            strengthValueLabel.textContent = e.target.value;
+                        }
+                    })
+                    let fractalize_button = Object.assign(document.createElement("button"), {
+                        id: "fractalize_button",
+                        textContent: "Fractalize",
+                        onclick: (e) => {
+                            e.preventDefault();
+                            CoastalTool.Fractalize(false, intensitySlider.value);
+                        }
+                    });
+                    fractalizeControls.append(strengthValueLabel, intensitySlider, fractalize_button);
+                }
+                else {
+                    fractalizeControls.innerHTML = '';
+                    let fractalize_button = Object.assign(document.createElement("button"), {
+                        id: "fractalize_button",
+                        textContent: "Fractalize",
+                        onclick: (e) => {
+                            e.preventDefault();
+                            CoastalTool.Fractalize(true, 0);
+                        }
+                    });
+                    fractalizeControls.append(fractalize_button)
+                }
 
 
-    updateFractalizeControls(true); // Show strength controls initially
+            }
+        })
 
-    // Get references to elements after updating innerHTML
-    const strengthValueLabel = document.getElementById("strength-value");
-    const intensitySlider = document.getElementById(
-      "fractalize_intensity_slider"
-    );
-    const automatedCheckbox = document.getElementById(
-      "fractalize_automated_checkbox"
-    );
-    const fractalizeButton = document.getElementById("fractalize_button");
 
-    intensitySlider.addEventListener("input", (e) => {
-      strengthValueLabel.textContent = e.target.value;
-    });
 
-    automatedCheckbox.addEventListener("change", () => {
-      updateFractalizeControls(!automatedCheckbox.checked);
-    });
+        automatedCheckbox.dispatchEvent(new Event('change'));
+        toolPropertiesPanel.append(checkbox_label,automatedCheckbox,fractalizeControls);
+        tool_info_panel.append(simplify_checkbox_label, simplify_checkbox);
+    }
 
-    fractalizeButton.onclick = (e) => {
-      e.preventDefault();
-      CoastalTool.Fractalize(automatedCheckbox.checked, intensitySlider.value);
-    };
+    ///////////////////////
+    //  ASSIGN BUTTONS
+    //////////////////////
 
-    toolPropertiesPanel.append(fractalizeControls, fractalize_button);
-    tool_info_panel.append(simplify_checkbox_label, simplify_checkbox);
-  }
+    let polygonal_tool_button = document.querySelector("#polygonal-tool-button");
+    polygonal_tool_button.onclick = (e) => Tools_Polygonal.activate();
 
-  ///////////////////////
-  //  ASSIGN BUTTONS
-  //////////////////////
+    let line_tool_button = document.querySelector("#line_tool_button");
+    line_tool_button.onclick = (e) => Tools_Line.activate();
 
-  let polygonal_tool_button = document.querySelector("#polygonal-tool-button");
-  polygonal_tool_button.onclick = (e) => Tools_Polygonal.activate();
+    let freedraw_tool_button = document.querySelector("#freedraw_tool_button");
+    freedraw_tool_button.onclick = (e) => Tools_FreeDraw.activate();
 
-  let line_tool_button = document.querySelector("#line_tool_button");
-  line_tool_button.onclick = (e) => Tools_Line.activate();
+    let coastline_tool_button = document.querySelector("#coastal_tool_button");
+    coastline_tool_button.onclick = (e) => SelectCoastlineTool();
 
-  let freedraw_tool_button = document.querySelector("#freedraw_tool_button");
-  freedraw_tool_button.onclick = (e) => Tools_FreeDraw.activate();
+    let dotlabel_tool_button = document.querySelector("#dotlabel_tool_button");
+    dotlabel_tool_button.onclick = (e) => Tools_DotLabel.activate();
 
-  let coastline_tool_button = document.querySelector("#coastal_tool_button");
-  coastline_tool_button.onclick = (e) => SelectCoastlineTool();
-
-  let dotlabel_tool_button = document.querySelector("#dotlabel_tool_button");
-  dotlabel_tool_button.onclick = (e) => Tools_DotLabel.activate();
-
-  let text_tool_button = document.querySelector("#text_tool_button");
-  text_tool_button.onclick = (e) => SelectAddLabelTool();
+    let text_tool_button = document.querySelector("#text_tool_button");
+    text_tool_button.onclick = (e) => SelectAddLabelTool();
 })();
 
 //////////////////// .
@@ -167,18 +182,18 @@ let CreateAndAssignTools = (function () {
 ////////////////////
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Delete") {
-    console.log("DELETE KEY PRESSED");
-    SelectionTool.deleteSelectedPoints();
-    event.preventDefault(); // Prevent default browser behavior
-  }
+    if (event.key === "Delete") {
+        console.log("DELETE KEY PRESSED");
+        SelectionTool.deleteSelectedPoints();
+        event.preventDefault(); // Prevent default browser behavior
+    }
 });
 
-document.addEventListener("keydown", function (event) {
-  if (event.ctrlKey && event.key === "z") {
-    event.preventDefault(); // Prevent default browser undo behavior
-    Undo(paper.project);
-  }
+document.addEventListener("keydown", function(event) {
+    if (event.ctrlKey && event.key === "z") {
+        event.preventDefault(); // Prevent default browser undo behavior
+        Undo(paper.project);
+    }
 });
 
 //*******************************
