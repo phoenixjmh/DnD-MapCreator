@@ -97,7 +97,7 @@ async function LoadProject(project) {
             project.importJSON(contents);
 
             const map_name_label = document.getElementById("map_name_label");
-            const fileName = filePath.split("\\").pop().split(".").shift();
+            const fileName = await window.api.getStrippedFileName(filePath);
             map_name_label.textContent = fileName;
 
             // Set autosave interval

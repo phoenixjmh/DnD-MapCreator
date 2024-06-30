@@ -11,8 +11,37 @@ var SelectionTool = (function() {
         } else {
             //default to regular moving selection
             selectionRectangle = null;
+
         }
     }
+    function onMouseDrag(event) {
+        if (event.event.which !== 1) {
+            return;
+        }
+        if (selectionRectangle) {
+            handleRectangleSelectionUpdate(event.point);
+        } else {
+            if (GetSelectedSegments()) {
+                moveSelectedPoints(event.delta);
+            }
+            if (GetSelectedTextItems()) {
+                moveSelectedText(event.delta);
+            }
+        }
+    }
+
+    function onMouseUp(e) {
+        if (selectionRectangle) {
+            //select points within the rectangle
+            selectPointsWithinRectangle();
+            selectTextWithinRectangle();
+            selectionRectangle.remove();
+            selectionRectangle = null;
+        }
+        console.log(`Selected ${getSelectedPaths().length} paths`);
+        TakeSnapshot(paper.project);
+    }
+
     function handleRectangleSelectionStart(point) {
         deselectAllPoints();
         selectionRectangle = new paper.Path.Rectangle({
@@ -28,33 +57,17 @@ var SelectionTool = (function() {
         selectionRectangle.segments[2].point = point;
         selectionRectangle.segments[3].point.y = point.y;
     }
-    function onMouseDrag(event) {
-        if (event.event.which !== 1) {
-            return;
-        }
-        if (selectionRectangle) {
-            handleRectangleSelectionUpdate(event.point);
-        } else {
-            if (GetSelectedSegments()) {
-                moveSelectedPoints(event.delta);
-            }
-        }
-    }
+
     function moveSelectedPoints(delta) {
         GetSelectedSegments().forEach((segment) => {
             segment.point = segment.point.add(delta);
         });
     }
-    function onMouseUp(e) {
-        if (selectionRectangle) {
-            //select points within the rectangle
-            selectPointsWithinRectangle();
-            selectTextWithinRectangle();
-            selectionRectangle.remove();
-            selectionRectangle = null;
-        }
-        console.log(`Selected ${getSelectedPaths().length} paths`);
-        TakeSnapshot(paper.project);
+
+    function moveSelectedText(delta) {
+        GetSelectedTextItems().forEach((textItem) => {
+            textItem.point = textItem.point.add(delta);
+        });
     }
     function selectPointsWithinRectangle() {
         deselectAllPoints();
@@ -76,21 +89,38 @@ var SelectionTool = (function() {
         if (!hit) deselectAllPoints();
     }
 
-   function selectTextWithinRectangle() {
-    let hit = false;
-    paper.project.getItems({
-      class: paper.PointText, // Select only PointText items
-    }).forEach((textItem) => {
-      if (selectionRectangle.contains(textItem.position)) {
-        textItem.selected = true;
-        hit = true;
-      } else {
-        textItem.selected = false; 
-      }
-    });
-  }
+    function selectTextWithinRectangle() {
+        let hit = false;
+        paper.project.getItems({
+            class: paper.PointText, // Select only PointText items
+        }).forEach((textItem) => {
+            if (selectionRectangle.contains(textItem.position)) {
+                textItem.selected = true;
+                hit = true;
+            } else {
+                textItem.selected = false;
+            }
+        });
+    }
+    function GetAllTextOrSegments() {
+
+        let selectedPoints = [];
+        let _segments = GetSelectedSegments();
+        let _textItems = GetSelectedTextItems();
+        if (_segments) {
+            selectedPoints = _segments;
+            if (_textItems)
+                selectedPoints.concat(_textItems);
+        }
+        else {
+            selectedPoints = _textItems;
+        }
+        return selectedPoints;
+    }
     function deselectAllPoints() {
-        let selectedPoints = GetSelectedSegments();
+
+        let selectedPoints = GetAllTextOrSegments();
+
         if (selectedPoints) {
             selectedPoints.forEach((segment) => {
                 segment.selected = false;
@@ -99,8 +129,9 @@ var SelectionTool = (function() {
     }
 
     function deleteSelectedPoints() {
+
+        let selectedPoints = GetAllTextOrSegments();
         let AREYOUSURE = true;
-        let selectedPoints = GetSelectedSegments();
         if (!selectedPoints) return;
 
         let totalSelectedPoints = selectedPoints.length - 4; //All points that are not the bounding box
@@ -112,6 +143,7 @@ var SelectionTool = (function() {
         if (!AREYOUSURE) return;
         selectedPoints.forEach((seg) => seg.remove());
         deselectAllPoints();
+
     }
     function GetSelectedSegments() {
         let selected = [];
@@ -127,6 +159,21 @@ var SelectionTool = (function() {
         if (selected.length > 0) return selected;
         else return null;
     }
+    function GetSelectedTextItems() {
+        var selectedTextItems = [];
+
+        paper.project.getItems({
+            class: paper.PointText
+        })
+            .forEach(textItem => {
+                if (textItem.selected)
+                    selectedTextItems.push(textItem);
+            })
+        if (selectedTextItems.length > 0)
+            return selectedTextItems;
+        else return null;
+    }
+
 
     return {
         onMouseDown: onMouseDown,
