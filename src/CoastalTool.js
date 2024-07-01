@@ -143,7 +143,6 @@ var CoastalTool = (function() {
         })
         automatedCheckbox.dispatchEvent(new Event('change'));
         toolPropertiesPanel.append(checkbox_label,automatedCheckbox,fractalizeControls);
-        tool_info_panel.append(simplify_checkbox_label, simplify_checkbox);
 
     }
 

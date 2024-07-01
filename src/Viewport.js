@@ -3,8 +3,7 @@ let Viewport = (function() {
     function Init() {
 
         let currentZoomLevel = 0;
-        let zoom_level_display = document.getElementById("zoom_level_display");
-        zoom_level_display.textContent = "Zoom Level:";
+        let zoom_level_display = document.getElementById("zoom-value");
 
         canvas.addEventListener("wheel", function(event) {
             event.preventDefault();

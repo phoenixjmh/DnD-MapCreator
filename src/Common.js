@@ -8,22 +8,10 @@ function AddPathObject(PathObject) {
 
 //SOME dom stuff here just for ease.
 
-let tool_info_panel = document.querySelector(".tool-info");
-let simplify_container=document.createElement('div');
-simplify_container.id='simplify_container';
-const simplify_checkbox = Object.assign(document.createElement("input"), {
-  type: "checkbox",
-  id: "simplify-checkbox",
-    checked:true
-});
-const simplify_checkbox_label = Object.assign(document.createElement("label"), {
-  textContent: "Simplify lines",
-  for: "simplify-checkbox",
-  id: "simplify-checkbox-label",
-});
+let persistent_tools_panel=document.querySelector('#persistent-tools');
+let simplify_checkbox=document.querySelector("#simplify-checkbox");
+let close_path_button = document.querySelector("#close-path-button");
 
-simplify_container.append(simplify_checkbox_label, simplify_checkbox)
-tool_info_panel.append(simplify_container);
 
 //Global Helpers
 function getAllPaths() {
@@ -47,6 +35,7 @@ function getSelectedPaths() {
   return p;
 }
 
+
 let DEBUG_CIRCLES = [];
 function DEBUG_DRAW_CIRCLE(radius, xLoc, yLoc) {
   DEBUG_CIRCLES.push(
@@ -64,6 +53,11 @@ function DEBUG_CLEAR_CIRCLES() {
   });
   DEBUG_CIRCLES.length = 0;
 }
+////////////////////////
+//      GLOBAL VARS
+///////////////////////
+
+let currentFillColor;
 
 paper.setup("myCanvas",{
     contextOptions:{

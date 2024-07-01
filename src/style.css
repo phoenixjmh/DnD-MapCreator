@@ -13,14 +13,15 @@ body {
   margin: 0;
   background-color: var(--background-color);
   color: var(--text-color);
-  overflow: auto; /* Prevent scrollbars on the body */
+  overflow: hidden; /* Prevent scrollbars on the body */
 }
 
 /* Main Container */
 #app-container {
   display: flex;
-  height: calc(100vh - 2rem);  /* Account for footer */
+  height: calc(100vh - 3rem);  /* Account for footer */
   padding: 1rem;
+    overflow:hidden;
 }
 
 /* Main Panel (Canvas Area) */
@@ -32,7 +33,7 @@ body {
 
 #myCanvas {
   width: 100%;
-  height: calc(100% - 3rem);  /* Adjust for title bar */
+  height: calc(100% - 2rem);  /* Adjust for title bar */
   border: 1px solid #455A64;  /* Subtler border */
     background-color:white;
     overflow:hidden;
@@ -50,9 +51,6 @@ body {
 }
 
 #zoom_level_display {
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
   padding: 0.5rem;
   background-color: rgba(0, 0, 0, 0.5);  /* Semi-transparent */
   border-radius: 5px;
@@ -96,7 +94,6 @@ body {
 
 /* Range Slider */
 input[type="range"] {
-  width: 100%;
   margin-top: 0.5rem;
 }
 /* Fractalize Controls */
@@ -133,17 +130,33 @@ width:100%;
     padding:.8rem;
     vertical-align:middle;
 }
-#simplify_container{
-    position:absolute;
-    left:83%;
-    top:1rem;
+#persistent-tools {
+    position:sticky;
+    bottom:0;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: var(--panel-color); /* Match the side panel background */
+  padding: 0.5rem;
+  border-radius: 0.5rem; /* Add rounded corners */
+  z-index: 2; /* Ensure it's above other content (if needed) */
+  width: auto;  /* Allow the container to fit its content */
+  gap: 10px;   /* Add consistent spacing between items */
+    font-size:.7rem;
+}
+.persistent-tool{
+    display:flex;
+    justify-content:space-evenly;
+    gap:1rem;
+    align-items:center;
+    padding: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.5);  /* Semi-transparent */
+    border-radius: 5px;
 }
 #help-button{
-    position:absolute;
-    left:95%;
-    top:.6rem;
     background-color:red;
     color:var(--text-color);
+    border:none;
     border-radius:100%;
     height:2rem;
     width:2rem;
@@ -171,4 +184,17 @@ summary{
     border-bottom:1px solid var(--text-color);
     padding:1rem;
     font-size:1rem;
+}
+button{
+
+  display: block;
+  padding: 0.2rem;
+  background-color: #455A64; /* Slightly darker background for tools */
+  color: var(--text-color);
+  text-align: center;
+  border-radius: 0.3rem;
+  text-decoration: none;
+    border:none;
+  transition: background-color 0.2s; /* Smooth hover effect */
+    font-size:.8rem;
 }

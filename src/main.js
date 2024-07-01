@@ -1,4 +1,4 @@
-import {HelpPanel} from "./HelpPanel.js"
+import { HelpPanel } from "./HelpPanel.js"
 import { LineTool } from "./LineTool.js";
 import { FreeDrawTool } from "./FreeDrawTool.js";
 import { CoastalTool } from "./CoastalTool.js";
@@ -6,7 +6,9 @@ import { SelectionTool } from "./SelectionTool.js";
 import { DotLabelTool } from "./DotLabelTool.js";
 import { PolygonalTool } from "./PolygonalLineTool.js";
 import { TextTool } from "./TextTool.js";
+import {FillTool} from "./FillTool.js"
 import { Viewport } from "./Viewport.js";
+
 
 window.api.onNewProject(() => {
     console.log("NEW HELLO!");
@@ -21,7 +23,7 @@ window.api.onLoadProject(() => {
 });
 
 ////////////////////////////////////
-//      ZOOM CONTROLS
+//      PERSISTENT TOOLS CONTROLS
 ////////////////////////////////////
 
 let stroke_width_slider = document.getElementById("stroke-width-slider");
@@ -29,6 +31,14 @@ let stroke_width_slider = document.getElementById("stroke-width-slider");
 stroke_width_slider.addEventListener("input", function() {
     LineTool.setBrushSize(stroke_width_slider.value);
 });
+
+close_path_button.onclick=(e)=>{
+    let paths=getSelectedPaths();
+    if(paths){
+    paths.forEach(path=>path.closePath())
+    console.log("Closing path");
+}
+}
 
 let CreateAndAssignTools = (function() {
     var Tools_Polygonal = new paper.Tool();
@@ -42,6 +52,8 @@ let CreateAndAssignTools = (function() {
     var Tools_DotLabel = new paper.Tool();
 
     var Tools_AddLabels = new paper.Tool();
+
+    var Tools_Fill = new paper.Tool();
 
     Tools_Polygonal.onMouseMove = PolygonalTool.onMouseMove;
     Tools_Polygonal.onMouseDown = PolygonalTool.onMouseDown;
@@ -64,18 +76,20 @@ let CreateAndAssignTools = (function() {
 
     Tools_AddLabels.onMouseDown = TextTool.onMouseDown;
 
-    let selection_tool_button = document.querySelector("#selection_tool_button");
-    selection_tool_button.onclick = function() {
-        Tools_Selection.activate();
-    };
+    Tools_Fill.onMouseDown=FillTool.onMouseDown;
+
+
 
     Viewport.Init();
     HelpPanel.Init();
 
 
-///////////////////////
-//  ASSIGN BUTTONS
-//////////////////////
+    ///////////////////////
+    //  ASSIGN BUTTONS
+    //////////////////////
+    //
+    //What we want here, is for there to be a running variable that tracks what the active tool is.
+    //The corresponding button can be a different color, and other tools can clear their panel.
 
     let polygonal_tool_button = document.querySelector("#polygonal-tool-button");
     polygonal_tool_button.onclick = (e) => Tools_Polygonal.activate();
@@ -98,6 +112,17 @@ let CreateAndAssignTools = (function() {
         Tools_AddLabels.activate();
         TextTool.OnActivate();
     }
+
+    let fill_tool_button=document.querySelector('#fill_tool_button');
+    fill_tool_button.onclick=(e)=>{
+        Tools_Fill.activate();
+        FillTool.OnActivate();
+    }
+
+    let selection_tool_button = document.querySelector("#selection_tool_button");
+    selection_tool_button.onclick = function() {
+        Tools_Selection.activate();
+    };
 })();
 
 //////////////////// .
@@ -120,10 +145,12 @@ document.addEventListener("keydown", function(event) {
 });
 
 
-var OnAwake=(function(){
-// MapLayerHandler(currentZoomLevel);
-TakeSnapshot(paper.project);
-console.log("Sup electron");
-paper.view.draw();
+
+
+var OnAwake = (function() {
+    // MapLayerHandler(currentZoomLevel);
+    TakeSnapshot(paper.project);
+    console.log("Sup electron");
+    paper.view.draw();
 })();
 
