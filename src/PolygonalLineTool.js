@@ -8,24 +8,20 @@ var PolygonalTool = (function() {
         if (event.event.which == 1) {
 
             if (firstPoint) {
-
                 console.log("PolygonDown");
-                path = new paper.Path(); // Create a new path
-                path.strokeColor = "black"; // Set stroke color (optional)
-                //path.add(event.point); // Add the first point
+                path = new paper.Path(); 
+                path.strokeColor = "black"; 
                 firstPoint = false;
             }
             else {
-                //path._segments.pop();
                 path.add(event.point);
-                console.log("Clig");
             }
 
             isDrawing = true;
         }
+        //close loop on right click
         if (event.event.which == 3) {
             isDrawing = false;
-            console.log(`Created polygon with ${path._segments.length} points `);
             firstPoint=true;
         }
     }
@@ -45,31 +41,7 @@ var PolygonalTool = (function() {
         }
 
     }
-    //   function onMouseDrag(event) {
-    //       if (event.event.which !== 1) {
-    //           return;
-    //       }
-    //       if (path) {
-    //           path.add(event.point); // Add points as you drag
-    //       }
-    //   }
-    //   function onMouseUp(event) {
-    //       if (event.event.which !== 1) {
-    //           return;
-    //       }
-    //       if (simplify_checkbox.checked) {
-    //           path.simplify();
-    //       }
 
-    //       let isDotLabel = false;
-    //       let PathObject = {
-    //           path,
-    //           mapLayer,
-    //           isDotLabel,
-    //       };
-    //       AddPathObject(PathObject);
-    //       TakeSnapshot(paper.project);
-    //   }
     function setMapLayer(layer) {
         mapLayer = layer;
     }

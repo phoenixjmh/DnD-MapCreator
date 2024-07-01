@@ -1,3 +1,4 @@
+import {HelpPanel} from "./HelpPanel.js"
 import { LineTool } from "./LineTool.js";
 import { FreeDrawTool } from "./FreeDrawTool.js";
 import { CoastalTool } from "./CoastalTool.js";
@@ -5,7 +6,7 @@ import { SelectionTool } from "./SelectionTool.js";
 import { DotLabelTool } from "./DotLabelTool.js";
 import { PolygonalTool } from "./PolygonalLineTool.js";
 import { TextTool } from "./TextTool.js";
-import { Viewport } from "./ZoomLayers.js";
+import { Viewport } from "./Viewport.js";
 
 window.api.onNewProject(() => {
     console.log("NEW HELLO!");
@@ -19,9 +20,9 @@ window.api.onLoadProject(() => {
     LoadProject(paper.project);
 });
 
-//******************************* */
+////////////////////////////////////
 //      ZOOM CONTROLS
-//******************************* */
+////////////////////////////////////
 
 let stroke_width_slider = document.getElementById("stroke-width-slider");
 
@@ -67,12 +68,14 @@ let CreateAndAssignTools = (function() {
     selection_tool_button.onclick = function() {
         Tools_Selection.activate();
     };
+
     Viewport.Init();
+    HelpPanel.Init();
 
 
-    ///////////////////////
-    //  ASSIGN BUTTONS
-    //////////////////////
+///////////////////////
+//  ASSIGN BUTTONS
+//////////////////////
 
     let polygonal_tool_button = document.querySelector("#polygonal-tool-button");
     polygonal_tool_button.onclick = (e) => Tools_Polygonal.activate();
@@ -116,12 +119,11 @@ document.addEventListener("keydown", function(event) {
     }
 });
 
-//*******************************
-//  EXPORT PNG OPTION
-//*******************************
 
-//for first run
+var OnAwake=(function(){
 // MapLayerHandler(currentZoomLevel);
 TakeSnapshot(paper.project);
 console.log("Sup electron");
 paper.view.draw();
+})();
+

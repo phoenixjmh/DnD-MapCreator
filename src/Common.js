@@ -1,5 +1,5 @@
-//path objects will take a path, and a layer that they were created on
 
+//path objects will take a path, and a layer that they were created on
 let AllPathObjects = [];
 function AddPathObject(PathObject) {
   AllPathObjects.push(PathObject);
@@ -65,5 +65,9 @@ function DEBUG_CLEAR_CIRCLES() {
   DEBUG_CIRCLES.length = 0;
 }
 
-paper.setup("myCanvas");
+paper.setup("myCanvas",{
+    contextOptions:{
+        willReadFrequently:true
+    }
+});
 const canvas=document.getElementById('myCanvas');

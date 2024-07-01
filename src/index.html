@@ -37,50 +37,51 @@
                 <input type="range" min="0.00001" max="10.000" step='0.0001' value="1" id="stroke-width-slider">
 
             </div>
+            <button id='help-button'>i</button>
         </div>
     </div>
     <script src="Common.js"></script>
     <script src="AppState.js"></script>
     <script type="module" src="main.js"></script>
 
-</body>
-<footer>
+    <div id='help-content' style="display:none;" >
         <details>
           <summary>Info</summary>
           <div>
-            <p>PROJECT WILL NOT AUTOSAVE UNTIL A SAVE FILE IS CREATED. After that it should autosave every 60 seconds. Projects can be loaded as well.</p>
-            <p>The autosave is a bit excessive, but for the time being, it prevents dataloss pretty well. In theory, with this gratuitous autosave, you can always revert back if you accidentally break something.</p>
-            <p>AutoSaves are stored in the Saves/Backups folder</p>
-            <p>Map layers are a work in progress, objects fading out. Disabled for now for testing purposes</p>
-            <p>Don't be ridiculous with the undo, if you think that a certain pattern of behavior might break it, it will. Loading an old document *might* remove undo history. Calling undo at this point might be sketchy.</p>
+            <p class='help-paragraph'>PROJECT WILL NOT AUTOSAVE UNTIL A SAVE FILE IS CREATED. After that it should autosave every 60 seconds. Projects can be loaded as well.</p>
+            <p class='help-paragraph'>The autosave is a bit excessive, but for the time being, it prevents dataloss pretty well. In theory, with this gratuitous autosave, you can always revert back if you accidentally break something.</p>
+            <p class='help-paragraph'>AutoSaves are stored in the Saves/Backups folder</p>
+            <p class='help-paragraph'>Map layers are a work in progress, objects fading out. Disabled for now for testing purposes</p>
+            <p class='help-paragraph'>Don't be ridiculous with the undo, if you think that a certain pattern of behavior might break it, it will. Loading an old document *might* remove undo history. Calling undo at this point might be sketchy.</p>
           </div>
         </details>
       
         <details>
           <summary>Navigation & General Usage</summary>
           <div>
-            <p>General Navigation: MouseWheel click and drag to pan the view.</p>
-            <p>Mousewheel to scroll</p>
-            <p>Snapshots are created on mouse up. This enables undo with ctrl-z. I defaulted the undo history to 20, can be increased.</p>
+            <p class='help-paragraph'>General Navigation: MouseWheel click and drag to pan the view.</p>
+            <p class='help-paragraph'>Mousewheel to scroll</p>
+            <p class='help-paragraph'>Snapshots are created on mouse up. This enables undo with ctrl-z. I defaulted the undo history to 20, can be increased.</p>
           </div>
         </details>
       
         <details>
           <summary>Tools & Features</summary>
           <div>
-            <p>Freedraw tool has brushwidth slider, it does nothing, as with infinite zoom, this presents a problem. We'll get there</p>
-            <p>Simplify lines defaults to on, this reduces the amount of points created, and the line is simplified. Can lead to slightly unexpected lines, but much nicer for coastal lines.</p>
-            <p>Selection tool: when holding shift, rectangular selection is created. When not holding shift, drag will move the selected points. Delete key to delete paths. Shift click on nothing to deselect all.</p>
-            <p>Delete function now prompts for confirmation if deleting more than 5 points, because I may have accidentally deleted hundreds on accident one time. Path selection has since been updated, but just to be safe.</p>
-            <p>Coastal Tool: Once a path is selected, the ENTIRE PATH in which the selected points reside can be subdivided, and displaced.</p>
-            <p>Deleting a large internal section of a coastline, if it intersects itself should resolve the path for you(connecting the points)</p>
-            <p>
+            <p class='help-paragraph'>Freedraw tool has brushwidth slider, it does nothing, as with infinite zoom, this presents a problem. We'll get there</p>
+            <p class='help-paragraph'>Simplify lines defaults to on, this reduces the amount of points created, and the line is simplified. Can lead to slightly unexpected lines, but much nicer for coastal lines.</p>
+            <p class='help-paragraph'>Selection tool: when holding shift, rectangular selection is created. When not holding shift, drag will move the selected points. Delete key to delete paths. Shift click on nothing to deselect all.</p>
+            <p class='help-paragraph'>Delete function now prompts for confirmation if deleting more than 5 points, because I may have accidentally deleted hundreds on accident one time. Path selection has since been updated, but just to be safe.</p>
+            <p class='help-paragraph'>Coastal Tool: Once a path is selected, the ENTIRE PATH in which the selected points reside can be subdivided, and displaced.</p>
+            <p class='help-paragraph'>Deleting a large internal section of a coastline, if it intersects itself should resolve the path for you(connecting the points)</p>
+            <p class='help-paragraph'>
             Add Label Tool: Shift click to add new text. Double click to edit existing text. Font size adjuster is in the info panel. Text can be moved with the Selection Tool.
             </p>
           </div>
         </details>
 
+    </div>
    
-</footer>
 
+</body>
 </html>

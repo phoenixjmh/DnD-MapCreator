@@ -32,15 +32,16 @@ var FreeDrawTool = (function () {
       path.simplify();
     }
 
-    let isDotLabel = false;
+
     let PathObject = {
       path,
       mapLayer,
-      isDotLabel,
     };
+
     AddPathObject(PathObject);
     TakeSnapshot(paper.project);
   }
+
   function setMapLayer(layer) {
     mapLayer = layer;
   }

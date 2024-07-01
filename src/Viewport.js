@@ -1,6 +1,3 @@
-
-
-
 let Viewport = (function() {
 
     function Init() {
@@ -36,22 +33,20 @@ let Viewport = (function() {
             paper.view.update();
         });
 
-        //////////////////////////////
+//////////////////////////////
 
-        //  PAN AND SCAN
+//  PAN AND SCAN
 
-        /////////////////////////////
+/////////////////////////////
         let lastPoint = null;
 
-        // Listen for mousedown event
         paper.view.onMouseDown = function(event) {
+            // Middle mouse button
             if (event.event.which === 2) {
-                // Middle mouse button
                 lastPoint = new paper.Point(event.point);
             }
         };
 
-        // Listen for mousemove event
         paper.view.onMouseDrag = function(event) {
             if (lastPoint) {
                 const delta = lastPoint.subtract(event.point);
@@ -59,11 +54,12 @@ let Viewport = (function() {
                 lastPoint = event.point.add(delta);
             }
         };
-        // Listen for mouseup event
+
         paper.view.onMouseUp = function(event) {
             lastPoint = null;
         };
 
+        //Handle item fading on zoom out / in
         function MapLayerHandler(zoom_level) {
             //testing purposes, brute force set the map layer to all tools
             LineTool.setMapLayer(zoom_level);
@@ -81,7 +77,7 @@ let Viewport = (function() {
         }
     }
 
-    return {Init:Init};
+    return { Init: Init };
 
 })();
 export { Viewport };

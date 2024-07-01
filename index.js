@@ -75,6 +75,7 @@ function createWindow() {
         },
       ],
     },
+
   ]);
   Menu.setApplicationMenu(mainMenu);
 
@@ -85,6 +86,7 @@ function createWindow() {
   });
   // Open the DevTools automatically if needed:
   // win.webContents.openDevTools();
+
 }
 
 app.whenReady().then(createWindow);

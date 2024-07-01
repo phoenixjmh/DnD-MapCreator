@@ -32,13 +32,12 @@ var SelectionTool = (function() {
 
     function onMouseUp(e) {
         if (selectionRectangle) {
-            //select points within the rectangle
             selectPointsWithinRectangle();
             selectTextWithinRectangle();
             selectionRectangle.remove();
             selectionRectangle = null;
         }
-        console.log(`Selected ${getSelectedPaths().length} paths`);
+
         TakeSnapshot(paper.project);
     }
 
@@ -145,11 +144,11 @@ var SelectionTool = (function() {
         deselectAllPoints();
 
     }
+
     function GetSelectedSegments() {
         let selected = [];
         getAllPaths().forEach((path) => {
             let segments = path.segments;
-            // console.log(path,"POINTUS");
             segments.forEach((seg) => {
                 if (seg.point.selected) {
                     selected.push(seg);

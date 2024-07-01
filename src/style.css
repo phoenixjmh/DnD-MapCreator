@@ -19,7 +19,7 @@ body {
 /* Main Container */
 #app-container {
   display: flex;
-  height: calc(100vh - 3rem);  /* Account for footer */
+  height: calc(100vh - 2rem);  /* Account for footer */
   padding: 1rem;
 }
 
@@ -27,7 +27,7 @@ body {
 #main-panel {
   flex: 1;  /* Takes up remaining space */
   min-width: 0;  /* Allow content to shrink */
-  overflow: auto; /* Show scrollbar if content overflows */
+  overflow: hidden; /* Show scrollbar if content overflows */
 }
 
 #myCanvas {
@@ -35,6 +35,8 @@ body {
   height: calc(100% - 3rem);  /* Adjust for title bar */
   border: 1px solid #455A64;  /* Subtler border */
     background-color:white;
+    overflow:hidden;
+    scrollbar-width:none;
 }
 
 #project_title_container {
@@ -135,4 +137,38 @@ width:100%;
     position:absolute;
     left:83%;
     top:1rem;
+}
+#help-button{
+    position:absolute;
+    left:95%;
+    top:.6rem;
+    background-color:red;
+    color:var(--text-color);
+    border-radius:100%;
+    height:2rem;
+    width:2rem;
+    font-size:1.5rem;
+}
+#help-content{
+    display:flex;
+    flex-direction:column;
+    width:60%;
+    height:60%;
+    position:absolute;
+    top:20%;
+    left:15%;
+    z-index:1;
+    background-color:black;
+    font-size:1.5rem;
+    overflow:auto;
+
+}
+summary{
+    padding:1rem;
+    color:green;
+}
+.help-paragraph{
+    border-bottom:1px solid var(--text-color);
+    padding:1rem;
+    font-size:1rem;
 }

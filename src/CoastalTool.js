@@ -3,6 +3,9 @@ var CoastalTool = (function() {
         mapLayer = layer;
     }
 
+    //if automated, we step down the noise based on the amount of 
+    //subdivided points, otherwise, we use the user supplied value
+
     function Fractalize(automated, value = 0) {
         if (getSelectedPaths().length > 1) {
             alert(`There are ${getSelectedPaths().length} paths selected. Do this one at a time.`);
@@ -17,10 +20,8 @@ var CoastalTool = (function() {
             let noiseFactor = (200 / newPoints.length) + 1;
             AddNoise(noiseFactor, newPoints);
         }
-
     }
 
-    //make this function return all the new points added
     function Subdivide() {
 
         let AddedPoints = [];
@@ -66,14 +67,13 @@ var CoastalTool = (function() {
             const offset = randomVector.multiply(noiseIntensity);
             const newPoint = point.add(offset);
 
-            // Ensure the new point doesn't cause intersections (simplified)
+            //If intersection will occur, skip iteration
             const prevPoint = selectedPath._segments[originalPointIndex - 1].point;
             const nextPoint = selectedPath._segments[(originalPointIndex + 1) % selectedPath._segments.length].point;
 
             const maxDistance = prevPoint.getDistance(nextPoint);
             if (prevPoint.getDistance(newPoint) > maxDistance || nextPoint.getDistance(newPoint) > maxDistance) {
-                // If the new point causes intersection, simply keep the original point
-                continue; // Skip to the next iteration
+                continue;
             }
 
             // Update the point
@@ -81,6 +81,7 @@ var CoastalTool = (function() {
         }
     }
 
+    //Create the tool properties panel
     function OnActivate(){
         const toolPropertiesPanel = document.querySelector(".tool-info");
         toolPropertiesPanel.innerHTML='';
@@ -140,9 +141,6 @@ var CoastalTool = (function() {
 
             }
         })
-
-
-
         automatedCheckbox.dispatchEvent(new Event('change'));
         toolPropertiesPanel.append(checkbox_label,automatedCheckbox,fractalizeControls);
         tool_info_panel.append(simplify_checkbox_label, simplify_checkbox);
