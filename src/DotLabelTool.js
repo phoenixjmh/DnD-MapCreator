@@ -33,13 +33,20 @@ var DotLabelTool = (function () {
   function setMapLayer(layer) {
     mapLayer = layer;
   }
+  function OnActivate() {
+    console.log("DOTLABEL ACTIVATE");
+  }
 
+  function OnDeactivate() {
+    console.log("DOTLABEL DEACTIVATE");
+  }
   return {
     onMouseDown: onMouseDown,
     onMouseUp: onMouseUp,
     setMapLayer: setMapLayer,
+    OnActivate: OnActivate,
+    OnDeactivate: OnDeactivate,
   };
 })();
 
-
-export {DotLabelTool}
+export { DotLabelTool };

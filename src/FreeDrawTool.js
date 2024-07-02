@@ -1,4 +1,3 @@
-
 var FreeDrawTool = (function () {
   var path;
   let stroke_width_slider = document.getElementById("stroke-width-slider");
@@ -32,7 +31,6 @@ var FreeDrawTool = (function () {
       path.simplify();
     }
 
-
     let PathObject = {
       path,
       mapLayer,
@@ -45,12 +43,21 @@ var FreeDrawTool = (function () {
   function setMapLayer(layer) {
     mapLayer = layer;
   }
+  function OnActivate() {
+    console.log("FREEDRAW ACTIVATE");
+  }
+
+  function OnDeactivate() {
+    console.log("FREEDRAW DEACTIVATE");
+  }
 
   return {
     onMouseUp: onMouseUp,
     onMouseDown: onMouseDown,
     onMouseDrag: onMouseDrag,
     setMapLayer: setMapLayer,
+    OnActivate: OnActivate,
+    OnDeactivate: OnDeactivate,
   };
 })();
-export {FreeDrawTool};
+export { FreeDrawTool };

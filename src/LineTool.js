@@ -6,6 +6,7 @@ var LineTool = (function () {
   function setBrushSize(val) {
     brushSize = val;
   }
+
   function onMouseDown(event) {
     if (event.event.which === 1) {
       console.log("Line down");
@@ -31,7 +32,7 @@ var LineTool = (function () {
     if (event.event.which !== 0) {
       return;
     }
-    
+
     let PathObject = {
       path,
       mapLayer,
@@ -41,17 +42,24 @@ var LineTool = (function () {
     TakeSnapshot(paper.project);
   }
 
-
   function setMapLayer(layer) {
     mapLayer = layer;
   }
 
+  function OnActivate() {
+    console.log("LINE ACTIVATED");
+  }
+  function OnDeactivate() {
+    console.log("LINE DEACTIVATED");
+  }
   return {
     onMouseDown: onMouseDown,
     onMouseDrag: onMouseDrag,
     onMouseUp: onMouseUp,
     setBrushSize: setBrushSize,
     setMapLayer: setMapLayer,
+    OnActivate: OnActivate,
+    OnDeactivate: OnDeactivate,
   };
 })();
-export {LineTool};
+export { LineTool };
