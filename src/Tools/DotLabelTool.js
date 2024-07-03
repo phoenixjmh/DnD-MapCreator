@@ -1,6 +1,7 @@
 var DotLabelTool = (function () {
   let dot_path;
   let mapLayer;
+  let m_Button;
 
   function onMouseDown(event) {
     if (event.event.which !== 1) {
@@ -33,12 +34,16 @@ var DotLabelTool = (function () {
   function setMapLayer(layer) {
     mapLayer = layer;
   }
+
   function OnActivate() {
-    console.log("DOTLABEL ACTIVATE");
+    m_Button.style.backgroundColor = "orange";
+  }
+  function OnDeactivate() {
+    m_Button.style.backgroundColor = "var(--tool-color)";
   }
 
-  function OnDeactivate() {
-    console.log("DOTLABEL DEACTIVATE");
+  function Register(button) {
+    m_Button = button;
   }
   return {
     onMouseDown: onMouseDown,
@@ -46,6 +51,7 @@ var DotLabelTool = (function () {
     setMapLayer: setMapLayer,
     OnActivate: OnActivate,
     OnDeactivate: OnDeactivate,
+    Register: Register,
   };
 })();
 

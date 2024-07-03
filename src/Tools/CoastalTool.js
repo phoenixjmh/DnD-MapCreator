@@ -1,4 +1,5 @@
 var CoastalTool = (function () {
+  let m_Button;
   function setMapLayer(layer) {
     mapLayer = layer;
   }
@@ -165,13 +166,17 @@ var CoastalTool = (function () {
       automatedCheckbox,
       fractalizeControls,
     );
-    console.log("COASTAL ACTIVATED");
+
+    m_Button.style.backgroundColor = "orange";
   }
 
   function OnDeactivate() {
-    console.log("COASTAL DEACTIVATED");
+    m_Button.style.backgroundColor = "var(--tool-color)";
   }
 
+  function Register(button) {
+    m_Button = button;
+  }
   return {
     setMapLayer: setMapLayer,
     Subdivide: Subdivide,
@@ -179,6 +184,7 @@ var CoastalTool = (function () {
     Fractalize: Fractalize,
     OnActivate: OnActivate,
     OnDeactivate: OnDeactivate,
+    Register: Register,
   };
 })();
 export { CoastalTool };

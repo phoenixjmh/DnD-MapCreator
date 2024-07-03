@@ -1,5 +1,6 @@
 var SelectionTool = (function () {
   let selectionRectangle;
+  let m_Button;
 
   function onMouseDown(event) {
     if (event.event.which !== 1) {
@@ -167,11 +168,13 @@ var SelectionTool = (function () {
     else return null;
   }
   function OnActivate() {
-    console.log("SELECTION ACTIVATED");
+    m_Button.style.backgroundColor = "orange";
   }
-
   function OnDeactivate() {
-    console.log("SELECTION DEACTIVATED");
+    m_Button.style.backgroundColor = "var(--tool-color)";
+  }
+  function Register(button) {
+    m_Button = button;
   }
 
   return {
@@ -182,6 +185,7 @@ var SelectionTool = (function () {
     deleteSelectedPoints,
     OnActivate: OnActivate,
     OnDeactivate: OnDeactivate,
+    Register: Register,
   };
 })();
 

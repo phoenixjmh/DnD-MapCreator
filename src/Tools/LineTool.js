@@ -2,6 +2,7 @@ var LineTool = (function () {
   let brushSize;
   let path;
   let mapLayer;
+  let m_Button;
 
   function setBrushSize(val) {
     brushSize = val;
@@ -47,10 +48,13 @@ var LineTool = (function () {
   }
 
   function OnActivate() {
-    console.log("LINE ACTIVATED");
+    m_Button.style.backgroundColor = "orange";
   }
   function OnDeactivate() {
-    console.log("LINE DEACTIVATED");
+    m_Button.style.backgroundColor = "var(--tool-color)";
+  }
+  function Register(button) {
+    m_Button = button;
   }
   return {
     onMouseDown: onMouseDown,
@@ -60,6 +64,7 @@ var LineTool = (function () {
     setMapLayer: setMapLayer,
     OnActivate: OnActivate,
     OnDeactivate: OnDeactivate,
+    Register: Register,
   };
 })();
 export { LineTool };

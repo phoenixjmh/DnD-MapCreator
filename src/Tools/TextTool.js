@@ -1,5 +1,6 @@
 var TextTool = (function () {
   let fontSize = "12px";
+  let m_Button;
   function onMouseDown(event) {
     if (event.event.which !== 1) return;
     if (event.modifiers.shift) {
@@ -104,20 +105,24 @@ var TextTool = (function () {
       ChangeFontSize(fs);
     };
 
-    console.log("TEXT ACTIVATE");
+    m_Button.style.backgroundColor = "orange";
   }
 
   function ChangeFontSize(fontSize) {
     document.querySelector("#add-label-text-area").style.fontSize = fontSize;
   }
   function OnDeactivate() {
-    console.log("TEXT DEACTIVATE");
+    m_Button.style.backgroundColor = "var(--tool-color)";
+  }
+  function Register(button) {
+    m_Button = button;
   }
   return {
     onMouseDown: onMouseDown,
     ChangeFontSize: ChangeFontSize,
     OnActivate: OnActivate,
     OnDeactivate: OnDeactivate,
+    Register: Register,
   };
 })();
 export { TextTool };

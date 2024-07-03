@@ -1,4 +1,5 @@
 var FillTool = (function () {
+  let m_Button;
   function onMouseDown(event) {
     if (event.event.which !== 1) return;
 
@@ -28,7 +29,7 @@ var FillTool = (function () {
   }
 
   function OnActivate() {
-    console.log("FILL ACTIVATED");
+    m_Button.style.backgroundColor = "orange";
     let tool_properties_panel = document.querySelector(".tool-info");
     tool_properties_panel.innerHTML = `
             <input type="color" id="custom-color-selector" value="#fffff2">
@@ -43,15 +44,18 @@ var FillTool = (function () {
       currentFillColor = color;
     });
   }
-
   function OnDeactivate() {
-    console.log("FILL DEACTIVATE");
+    m_Button.style.backgroundColor = "var(--tool-color)";
   }
 
+  function Register(button) {
+    m_Button = button;
+  }
   return {
     onMouseDown: onMouseDown,
     OnActivate: OnActivate,
     OnDeactivate: OnDeactivate,
+    Register: Register,
   };
 })();
 export { FillTool };

@@ -1,4 +1,3 @@
-
 //path objects will take a path, and a layer that they were created on
 let AllPathObjects = [];
 function AddPathObject(PathObject) {
@@ -8,10 +7,10 @@ function AddPathObject(PathObject) {
 
 //SOME dom stuff here just for ease.
 
-let persistent_tools_panel=document.querySelector('#persistent-tools');
-let simplify_checkbox=document.querySelector("#simplify-checkbox");
+let persistent_tools_panel = document.querySelector("#persistent-tools");
+let simplify_checkbox = document.querySelector("#simplify-checkbox");
 let close_path_button = document.querySelector("#close-path-button");
-
+let properties_panel = document.querySelector(".tool-info");
 
 //Global Helpers
 function getAllPaths() {
@@ -35,7 +34,6 @@ function getSelectedPaths() {
   return p;
 }
 
-
 let DEBUG_CIRCLES = [];
 function DEBUG_DRAW_CIRCLE(radius, xLoc, yLoc) {
   DEBUG_CIRCLES.push(
@@ -44,7 +42,7 @@ function DEBUG_DRAW_CIRCLE(radius, xLoc, yLoc) {
       radius: radius, // You can adjust the radius as needed
       strokeColor: "black",
       fillColor: "red",
-    })
+    }),
   );
 }
 function DEBUG_CLEAR_CIRCLES() {
@@ -59,9 +57,9 @@ function DEBUG_CLEAR_CIRCLES() {
 
 let currentFillColor;
 
-paper.setup("myCanvas",{
-    contextOptions:{
-        willReadFrequently:true
-    }
+paper.setup("myCanvas", {
+  contextOptions: {
+    willReadFrequently: true,
+  },
 });
-const canvas=document.getElementById('myCanvas');
+const canvas = document.getElementById("myCanvas");

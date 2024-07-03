@@ -1,12 +1,12 @@
 import { HelpPanel } from "./HelpPanel.js";
-import { LineTool } from "./LineTool.js";
-import { FreeDrawTool } from "./FreeDrawTool.js";
-import { CoastalTool } from "./CoastalTool.js";
-import { SelectionTool } from "./SelectionTool.js";
-import { DotLabelTool } from "./DotLabelTool.js";
-import { PolygonalTool } from "./PolygonalLineTool.js";
-import { TextTool } from "./TextTool.js";
-import { FillTool } from "./FillTool.js";
+import { LineTool } from "./Tools/LineTool.js";
+import { FreeDrawTool } from "./Tools/FreeDrawTool.js";
+import { CoastalTool } from "./Tools/CoastalTool.js";
+import { SelectionTool } from "./Tools/SelectionTool.js";
+import { DotLabelTool } from "./Tools/DotLabelTool.js";
+import { PolygonalTool } from "./Tools/PolygonalLineTool.js";
+import { TextTool } from "./Tools/TextTool.js";
+import { FillTool } from "./Tools/FillTool.js";
 import { Viewport } from "./Viewport.js";
 
 window.api.onNewProject(() => {
@@ -91,40 +91,40 @@ let CreateAndAssignTools = (function () {
   let polygonal_tool_button = document.querySelector("#polygonal-tool-button");
   polygonal_tool_button.onclick = (e) => {
     // PolygonalTool.OnActivate();
-    ToolActivationHandler(PolygonalTool);
+    ToolActivationHandler(PolygonalTool, polygonal_tool_button);
     Tools_Polygonal.activate();
   };
 
   let line_tool_button = document.querySelector("#line_tool_button");
   line_tool_button.onclick = (e) => {
     // LineTool.OnActivate();
-    ToolActivationHandler(LineTool);
+    ToolActivationHandler(LineTool, line_tool_button);
     Tools_Line.activate();
   };
 
   let freedraw_tool_button = document.querySelector("#freedraw_tool_button");
   freedraw_tool_button.onclick = (e) => {
     // FreeDrawTool.OnActivate();
-    ToolActivationHandler(FreeDrawTool);
+    ToolActivationHandler(FreeDrawTool, freedraw_tool_button);
     Tools_FreeDraw.activate();
   };
 
-  let coastline_tool_button = document.querySelector("#coastal_tool_button");
-  coastline_tool_button.onclick = (e) => {
-    ToolActivationHandler(CoastalTool);
+  let coastal_tool_button = document.querySelector("#coastal_tool_button");
+  coastal_tool_button.onclick = (e) => {
+    ToolActivationHandler(CoastalTool, coastal_tool_button);
   };
 
   let dotlabel_tool_button = document.querySelector("#dotlabel_tool_button");
   dotlabel_tool_button.onclick = (e) => {
     // DotLabelTool.OnActivate();
-    ToolActivationHandler(DotLabelTool);
+    ToolActivationHandler(DotLabelTool, dotlabel_tool_button);
     Tools_DotLabel.activate();
   };
 
   let text_tool_button = document.querySelector("#text_tool_button");
   text_tool_button.onclick = (e) => {
     Tools_AddLabels.activate();
-    ToolActivationHandler(TextTool);
+    ToolActivationHandler(TextTool, text_tool_button);
     // TextTool.OnActivate();
   };
 
@@ -132,34 +132,52 @@ let CreateAndAssignTools = (function () {
   fill_tool_button.onclick = (e) => {
     Tools_Fill.activate();
     // FillTool.OnActivate();
-    ToolActivationHandler(FillTool);
+    ToolActivationHandler(FillTool, fill_tool_button);
   };
 
   let selection_tool_button = document.querySelector("#selection_tool_button");
   selection_tool_button.onclick = function () {
     Tools_Selection.activate();
     // SelectionTool.OnActivate();
-    ToolActivationHandler(SelectionTool);
+    ToolActivationHandler(SelectionTool, selection_tool_button);
   };
-})();
-
-function ToolActivationHandler(activeTool) {
   let ALL_TOOLS = [
     PolygonalTool,
-    SelectionTool,
-    FreeDrawTool,
     LineTool,
+    FreeDrawTool,
+    CoastalTool,
+    SelectionTool,
     DotLabelTool,
     TextTool,
     FillTool,
   ];
-  console.log("============\n");
-  activeTool.OnActivate();
-  ALL_TOOLS.forEach((tool) => {
-    if (tool !== activeTool) tool.OnDeactivate();
-  });
-  console.log("===========\n");
-}
+  let ALL_BUTTONS = [
+    polygonal_tool_button,
+    line_tool_button,
+    freedraw_tool_button,
+    coastal_tool_button,
+    selection_tool_button,
+    dotlabel_tool_button,
+    text_tool_button,
+    fill_tool_button,
+  ];
+
+  var RegisterToolButtons = (function () {
+    for (let i = 0; i < ALL_TOOLS.length; i++) {
+      ALL_TOOLS[i].Register(ALL_BUTTONS[i]);
+    }
+  })();
+  function ToolActivationHandler(activeTool, button) {
+    properties_panel.innerHTML = "";
+    activeTool.OnActivate(button);
+    ALL_TOOLS.forEach((tool) => {
+      if (tool !== activeTool) {
+        tool.OnDeactivate();
+      }
+    });
+  }
+})();
+
 //////////////////// .
 //  KEY LISTENERS
 ////////////////////

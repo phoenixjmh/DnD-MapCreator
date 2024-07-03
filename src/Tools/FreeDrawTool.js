@@ -2,6 +2,7 @@ var FreeDrawTool = (function () {
   var path;
   let stroke_width_slider = document.getElementById("stroke-width-slider");
   let mapLayer;
+  let m_Button;
 
   let brushSize = stroke_width_slider.value;
   function onMouseDown(event) {
@@ -44,11 +45,13 @@ var FreeDrawTool = (function () {
     mapLayer = layer;
   }
   function OnActivate() {
-    console.log("FREEDRAW ACTIVATE");
+    m_Button.style.backgroundColor = "orange";
   }
-
   function OnDeactivate() {
-    console.log("FREEDRAW DEACTIVATE");
+    m_Button.style.backgroundColor = "var(--tool-color)";
+  }
+  function Register(button) {
+    m_Button = button;
   }
 
   return {
@@ -58,6 +61,7 @@ var FreeDrawTool = (function () {
     setMapLayer: setMapLayer,
     OnActivate: OnActivate,
     OnDeactivate: OnDeactivate,
+    Register: Register,
   };
 })();
 export { FreeDrawTool };

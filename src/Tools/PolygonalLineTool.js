@@ -2,6 +2,7 @@ var PolygonalTool = (function () {
   var path;
   let firstPoint = true;
   let isDrawing = false;
+  let m_Button;
   function onMouseDown(event) {
     if (event.event.which == 1) {
       if (firstPoint) {
@@ -38,11 +39,13 @@ var PolygonalTool = (function () {
     mapLayer = layer;
   }
   function OnActivate() {
-    console.log("POLYGON ACTIVATED");
+    m_Button.style.backgroundColor = "orange";
   }
-
   function OnDeactivate() {
-    console.log("POLYGON DEACTIVATED");
+    m_Button.style.backgroundColor = "var(--tool-color)";
+  }
+  function Register(button) {
+    m_Button = button;
   }
   return {
     onMouseDown: onMouseDown,
@@ -50,6 +53,7 @@ var PolygonalTool = (function () {
     setMapLayer: setMapLayer,
     OnActivate: OnActivate,
     OnDeactivate: OnDeactivate,
+    Register: Register,
   };
 })();
 export { PolygonalTool };
