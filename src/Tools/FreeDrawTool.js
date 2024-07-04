@@ -1,8 +1,8 @@
-
 var FreeDrawTool = (function () {
   var path;
   let stroke_width_slider = document.getElementById("stroke-width-slider");
   let mapLayer;
+  let m_Button;
 
   let brushSize = stroke_width_slider.value;
   function onMouseDown(event) {
@@ -12,6 +12,7 @@ var FreeDrawTool = (function () {
     console.log("FreeDrawDown");
     path = new paper.Path(); // Create a new path
     path.strokeColor = "black"; // Set stroke color (optional)
+    path.strokeScaling = false;
     path.strokeWidth = brushSize;
     path.add(event.point); // Add the first point
   }
@@ -32,7 +33,6 @@ var FreeDrawTool = (function () {
       path.simplify();
     }
 
-
     let PathObject = {
       path,
       mapLayer,
@@ -45,12 +45,24 @@ var FreeDrawTool = (function () {
   function setMapLayer(layer) {
     mapLayer = layer;
   }
+  function OnActivate() {
+    m_Button.style.backgroundColor = "orange";
+  }
+  function OnDeactivate() {
+    m_Button.style.backgroundColor = "var(--tool-color)";
+  }
+  function Register(button) {
+    m_Button = button;
+  }
 
   return {
     onMouseUp: onMouseUp,
     onMouseDown: onMouseDown,
     onMouseDrag: onMouseDrag,
     setMapLayer: setMapLayer,
+    OnActivate: OnActivate,
+    OnDeactivate: OnDeactivate,
+    Register: Register,
   };
 })();
-export {FreeDrawTool};
+export { FreeDrawTool };

@@ -2,10 +2,12 @@ var LineTool = (function () {
   let brushSize;
   let path;
   let mapLayer;
+  let m_Button;
 
   function setBrushSize(val) {
     brushSize = val;
   }
+
   function onMouseDown(event) {
     if (event.event.which === 1) {
       console.log("Line down");
@@ -31,7 +33,7 @@ var LineTool = (function () {
     if (event.event.which !== 0) {
       return;
     }
-    
+
     let PathObject = {
       path,
       mapLayer,
@@ -41,17 +43,28 @@ var LineTool = (function () {
     TakeSnapshot(paper.project);
   }
 
-
   function setMapLayer(layer) {
     mapLayer = layer;
   }
 
+  function OnActivate() {
+    m_Button.style.backgroundColor = "orange";
+  }
+  function OnDeactivate() {
+    m_Button.style.backgroundColor = "var(--tool-color)";
+  }
+  function Register(button) {
+    m_Button = button;
+  }
   return {
     onMouseDown: onMouseDown,
     onMouseDrag: onMouseDrag,
     onMouseUp: onMouseUp,
     setBrushSize: setBrushSize,
     setMapLayer: setMapLayer,
+    OnActivate: OnActivate,
+    OnDeactivate: OnDeactivate,
+    Register: Register,
   };
 })();
-export {LineTool};
+export { LineTool };
