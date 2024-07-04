@@ -12,6 +12,7 @@ var FreeDrawTool = (function () {
     console.log("FreeDrawDown");
     path = new paper.Path(); // Create a new path
     path.strokeColor = "black"; // Set stroke color (optional)
+    path.strokeScaling = false;
     path.strokeWidth = brushSize;
     path.add(event.point); // Add the first point
   }

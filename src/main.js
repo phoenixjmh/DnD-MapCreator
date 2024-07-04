@@ -182,18 +182,6 @@ let CreateAndAssignTools = (function () {
 //  KEY LISTENERS
 ////////////////////
 
-let debugprintbutton=Object.assign(document.createElement("button"),{
-  onclick:(e)=>{
-    console.log(getSelectedPaths()[0]._segments);
-  },
-  textContent:"PRINT"
-
-})
-document.querySelector('#main-panel').append(debugprintbutton);
-debugprintbutton.style.position="absolute";
-debugprintbutton.style.left="10px";
-debugprintbutton.style.top="200px";
-
 document.addEventListener("keydown", (event) => {
   if (event.key === "Delete") {
     console.log("DELETE KEY PRESSED");

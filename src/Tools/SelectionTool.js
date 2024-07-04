@@ -46,7 +46,7 @@ var SelectionTool = (function () {
     selectionRectangle = new paper.Path.Rectangle({
       from: point,
       to: point,
-      strokeColor: "blue",
+      strokeColor: "black",
       dashArray: [4, 4],
     });
   }

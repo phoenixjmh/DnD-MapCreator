@@ -1,0 +1,44 @@
+This is a paperjs app. There is some undesired behavior, but let me explain what this does first.
+
+Infinite zoom out functionality.
+Items are scaled instead of a natural zoom.
+The items would lose detail when scaled too low.
+I was scaling the entire layer, as this was a stable way to zoom out, where items would not lose their relative position to eachother.
+that looked like paper.project.activeLayer.scale(scalefactor).
+which produced a very convincing "zoom".
+
+I just added functionality seen below, that when an object hit a certain size, it would stop scaling down. This works perfectly, but now there's a problem, which is what I'm discussing with you. When items are at minimum size, if we pan the camera, then zoom back in, the items, when scaling back up, do not keep their relative positions, due to the fact that the scaling is also MOVING the objects around the viewpos. When an object is not scaling, it is not following the relative locations of the objects that are scaling, so they are not in the proper location after the zoom.
+
+Perhaps moving the objects instead of scaling them once they are shouldStopScaling==true.
+I've tried a version of this using viewPos.subtract(item.position).multiply(1-scalingFactor.x), but it did not solve the problem at all. I'm completely open to different ways of solving this problem, anything that works.
+
+      paper.project.activeLayer.children.forEach((item) => {
+        if (item.shouldStopScaling && currentZoomLevel <= item.stoppedAt) {
+          const relativePos = item.position.subtract(viewPos); // Relative position to viewPos
+          const scaledPos = relativePos.multiply(scalingFactor); // Simulate scaling
+          const translation = scaledPos.subtract(relativePos); // Calculate movement
+          item.translate(translation);
+          console.log("A");
+          //FUCK
+          return;
+        }
+
+        if (item.shouldStopScaling == true) {
+          item.shouldStopScaling = false;
+          item.scale(scalingFactor, viewPos);
+          console.log("B");
+        }
+        if (hasClosePoints(item, distanceThreshold)) {
+          item.shouldStopScaling = true;
+          item.stoppedAt = currentZoomLevel;
+          // item.translate(
+          //   viewPos.subtract(item.position).multiply(1 - scalingFactor.x),
+          // );
+          console.log(item.stoppedAt, "C");
+        } else {
+          item.shouldStopScaling = false;
+          item.scale(scalingFactor, viewPos);
+          console.log("D");
+        }
+      });
+    });

@@ -18,6 +18,7 @@ let Viewport = (function () {
       if (currentZoomLevel == 100 && zoomFactor > 1) {
         return;
       }
+      if (currentZoomLevel == -200 && zoomFactor < 1) return;
       if (zoomFactor > 1) {
         currentZoomLevel += 1;
         zoomFactor = 1.1;
@@ -31,14 +32,13 @@ let Viewport = (function () {
 
       const viewPos = paper.view.center;
       const scalingFactor = new paper.Point(zoomFactor, zoomFactor);
-      let inverseScalingFactor=new paper.Point(1/zoomFactor,1/zoomFactor);
-      let matrix=new paper.Matrix().scale(zoomFactor,viewPos);
-      let inverseMatrix=new paper.Matrix().scale(1/zoomFactor,viewPos);
-      
+      let matrix = new paper.Matrix().scale(zoomFactor, viewPos);
+      let inverseMatrix = new paper.Matrix().scale(1 / zoomFactor, viewPos);
 
-
-       function getDistance(point1, point2) {
-        return Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2));
+      function getDistance(point1, point2) {
+        return Math.sqrt(
+          Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2),
+        );
       }
 
       // Function to check if any points in an object are within the threshold distance
@@ -46,7 +46,10 @@ let Viewport = (function () {
         if (!item.segments) return false; // Skip if item does not have segments
         for (let i = 0; i < item.segments.length; i++) {
           for (let j = i + 1; j < item.segments.length; j++) {
-            if (getDistance(item.segments[i].point, item.segments[j].point) < threshold) {
+            if (
+              getDistance(item.segments[i].point, item.segments[j].point) <
+              threshold
+            ) {
               return true;
             }
           }
@@ -58,63 +61,49 @@ let Viewport = (function () {
 
       // paper.project.activeLayer.scale(scalingFactor,viewPos); // Scale
 
-      paper.view.update();
       // Define the distance threshold
-      const distanceThreshold = 0.1;
+      const distanceThreshold = 0.0000000000001;
 
       paper.project.activeLayer.children.forEach((item) => {
-        if (item.shouldStopScaling && currentZoomLevel <= item.stoppedAt) {
-          item.translate(viewPos.subtract(item.position).multiply(1 - scalingFactor.x));
-          //FUCK
-          return;
-        }
-        
-        if(item.shouldStopScaling==true){
-          item.shouldStopScaling=false;
-          item.scale(scalingFactor,viewPos);
-          
-        }
         if (hasClosePoints(item, distanceThreshold)) {
           item.shouldStopScaling = true;
-          item.stoppedAt = currentZoomLevel; 
-          item.scale(1,viewPos);
-          console.log(item.stoppedAt);
-        } else {
-          item.shouldStopScaling = false;
-          item.scale(scalingFactor,viewPos);
+          item.stoppedAt = currentZoomLevel;
+          // item.translate(
+          //   viewPos.subtract(item.position).multiply(1 - scalingFactor.x),
+          // );
+          console.log("TOO SMALL");
         }
       });
-
+      paper.project.activeLayer.scale(scalingFactor, viewPos);
+      paper.view.update();
     });
+    // Apply scaling conditionally
+    // paper.project.activeLayer.children.forEach((item) => {
+    //   if (!hasClosePoints(item, distanceThreshold)||zoomFactor>1&&currentZoomLevel>=item.data.StoppedAt) {
+    //     if(zoomFactor>1&&currentZoomLevel>=item.data.StoppedAt)
+    //       {
+    //         item.data.StoppedAt='';
+    //         if(item.data.isMinimumSize)
+    //         item.isMinimumSize=false;
 
+    //       }
+    //     item.transform(matrix);
+    //   }
+    //   else{
+    //     if(!item.data.isMinimumSize){
 
-      // Apply scaling conditionally
-      // paper.project.activeLayer.children.forEach((item) => {
-      //   if (!hasClosePoints(item, distanceThreshold)||zoomFactor>1&&currentZoomLevel>=item.data.StoppedAt) {
-      //     if(zoomFactor>1&&currentZoomLevel>=item.data.StoppedAt)
-      //       {
-      //         item.data.StoppedAt='';
-      //         if(item.data.isMinimumSize)
-      //         item.isMinimumSize=false;
+    //     item.data.StoppedAt=currentZoomLevel;
+    //     console.log("CLOSE POINTS",item.data);
+    //     item.data.isMinimumSize=true;
+    //     }
 
-      //       }
-      //     item.transform(matrix);
-      //   }
-      //   else{
-      //     if(!item.data.isMinimumSize){
+    //   }
+    // });
 
-      //     item.data.StoppedAt=currentZoomLevel;
-      //     console.log("CLOSE POINTS",item.data);
-      //     item.data.isMinimumSize=true;
-      //     }
+    // // paper.project.activeLayer.scale(scalingFactor, viewPos); // Scale
+    // paper.project.activeLayer.transform(matrix);
 
-      //   }
-      // });
-
-      // // paper.project.activeLayer.scale(scalingFactor, viewPos); // Scale
-      // paper.project.activeLayer.transform(matrix);
-
-      // paper.view.update();
+    // paper.view.update();
 
     //////////////////////////////
 
