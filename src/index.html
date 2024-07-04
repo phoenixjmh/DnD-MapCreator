@@ -1,108 +1,227 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js"></script>
+        <title>Map Tool</title>
+        <link rel="stylesheet" type="text/css" href="style2.css" />
+    </head>
 
-<head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js"></script>
-    <title>Map Tool</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
-</head>
-
-
-<body>
-    <div id='app-container'>
-        <div id='main-panel'>
-
-            <div id="project_title_container">
-                <label id="map_name_label">Untitled Map</label>
+    <body>
+        <div id="app-container">
+            <div id="main-panel">
+                <div id="project_title_container">
+                    <label id="map_name_label">Untitled Map</label>
+                </div>
+                <canvas id="myCanvas" resize></canvas>
             </div>
-            <canvas id="myCanvas" resize></canvas>
+            <div id="sidepanel">
+                <div class="toolbar">
+                    <a class="tool" id="polygonal-tool-button" href="#"
+                        >Polygonal line</a
+                    >
+                    <a class="tool" id="line_tool_button" href="#">Line</a>
+                    <a class="tool" id="freedraw_tool_button" href="#"
+                        >Free Draw</a
+                    >
+                    <a class="tool" id="coastal_tool_button" href="#"
+                        >Coastline Tool</a
+                    >
+                    <a class="tool" id="selection_tool_button" href="#"
+                        >Selection Tool</a
+                    >
+                    <a class="tool" id="dotlabel_tool_button" href="#"
+                        >Dot & Label Tool</a
+                    >
+                    <a class="tool" id="text_tool_button" href="#"
+                        >Add Labels</a
+                    >
+                    <a class="tool" id="fill_tool_button" href="#">Fill Tool</a>
+                </div>
+                <div class="tool-info"></div>
+            </div>
         </div>
-        <div id='sidepanel'>
-            <div class='toolbar'>
 
-                <a class='tool' id='polygonal-tool-button' href="#">Polygonal line</a>
-                <a class='tool' id='line_tool_button' href="#">Line</a>
-                <a class='tool' id='freedraw_tool_button' href="#">Free Draw</a>
-                <a class='tool' id='coastal_tool_button' href="#">Coastline Tool</a>
-                <a class='tool' id='selection_tool_button' href="#">Selection Tool</a>
-                <a class='tool' id='dotlabel_tool_button' href="#">Dot & Label Tool</a>
-                <a class='tool' id='text_tool_button' href="#">Add Labels</a>
-                <a class='tool' id='fill_tool_button' href="#">Fill Tool</a>
-            </div>
-            <div class='tool-info'>
+        <div id="persistent-tools">
+            <div class="persistent-tool" id="zoom_level_display">
+                <svg
+                    id="zoom-icon"
+                    width="20px"
+                    height="20px"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    stroke="#ffffff"
+                >
+                    <g id="SVGRepo_bgCarrier" stroke-width="0" />
 
+                    <g
+                        id="SVGRepo_tracerCarrier"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+
+                    <g id="SVGRepo_iconCarrier">
+                        <path
+                            d="M10 17C13.866 17 17 13.866 17 10C17 6.13401 13.866 3 10 3C6.13401 3 3 6.13401 3 10C3 13.866 6.13401 17 10 17Z"
+                            stroke="#ffffff"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                        <path
+                            d="M20.9992 21L14.9492 14.95"
+                            stroke="#ffffff"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                        <path
+                            d="M6 10H14"
+                            stroke="#ffffff"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                        <path
+                            d="M10 6V14"
+                            stroke="#ffffff"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </g>
+                </svg>
+                <span id="zoom-value">0</span>
             </div>
-            
+
+            <div class="persistent-tool">
+                <label for="stroke-width-slider">Brush Width:</label>
+                <input
+                    type="range"
+                    min="0.00001"
+                    max="10.000"
+                    step="0.0001"
+                    value="1"
+                    id="stroke-width-slider"
+                />
+            </div>
+
+            <div id="simplify_container" class="persistent-tool">
+                <label for="simplify-checkbox" id="simplify-checkbox-label"
+                    >Simplify Lines</label
+                >
+
+                <input type="checkbox" id="simplify-checkbox" checked="true" />
+            </div>
+            <div class="persistent-tool">
+                <label for="background-color-picker">Background Color</label>
+                <input
+                    type="color"
+                    value="#fffffff"
+                    id="background-color-picker"
+                />
+            </div>
+            <button id="close-path-button" class="persistent-tool">
+                Close path
+            </button>
+            <button id="help-button" class="persistent-tool">i</button>
         </div>
-    </div>
 
-    <div id='persistent-tools'>
-            <div class='persistent-tool' id='zoom_level_display'>
+        <script src="Common.js"></script>
+        <script src="AppState.js"></script>
+        <script type="module" src="main.js"></script>
 
-                    <svg id='zoom-icon' width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
-                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
-                    <g id="SVGRepo_iconCarrier"> <path d="M10 17C13.866 17 17 13.866 17 10C17 6.13401 13.866 3 10 3C6.13401 3 3 6.13401 3 10C3 13.866 6.13401 17 10 17Z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> <path d="M20.9992 21L14.9492 14.95" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> <path d="M6 10H14" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> <path d="M10 6V14" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> </g>
-                    </svg>
-                    <span id='zoom-value'>0</span>
-            </div>
+        <div id="help-content" style="display: none">
+            <details>
+                <summary>Info</summary>
+                <div>
+                    <p class="help-paragraph">
+                        PROJECT WILL NOT AUTOSAVE UNTIL A SAVE FILE IS CREATED.
+                        After that it should autosave every 60 seconds. Projects
+                        can be loaded as well.
+                    </p>
+                    <p class="help-paragraph">
+                        The autosave is a bit excessive, but for the time being,
+                        it prevents dataloss pretty well. In theory, with this
+                        gratuitous autosave, you can always revert back if you
+                        accidentally break something.
+                    </p>
+                    <p class="help-paragraph">
+                        AutoSaves are stored in the Saves/Backups folder
+                    </p>
+                    <p class="help-paragraph">
+                        Map layers are a work in progress, objects fading out.
+                        Disabled for now for testing purposes
+                    </p>
+                    <p class="help-paragraph">
+                        Don't be ridiculous with the undo, if you think that a
+                        certain pattern of behavior might break it, it will.
+                        Loading an old document *might* remove undo history.
+                        Calling undo at this point might be sketchy.
+                    </p>
+                </div>
+            </details>
 
-            <div class='persistent-tool'>
-        <label for='stroke-width-slider'>Brush Width:</label>
-        <input type="range" min="0.00001" max="10.000" step='0.0001' value="1" id="stroke-width-slider">
-            </div>
+            <details>
+                <summary>Navigation & General Usage</summary>
+                <div>
+                    <p class="help-paragraph">
+                        General Navigation: MouseWheel click and drag to pan the
+                        view.
+                    </p>
+                    <p class="help-paragraph">Mousewheel to scroll</p>
+                    <p class="help-paragraph">
+                        Snapshots are created on mouse up. This enables undo
+                        with ctrl-z. I defaulted the undo history to 20, can be
+                        increased.
+                    </p>
+                </div>
+            </details>
 
-            <div id='simplify_container'class='persistent-tool'>
-            <label for="simplify-checkbox" id="simplify-checkbox-label">Simplify Lines</label>
-
-            <input type='checkbox' id='simplify-checkbox'checked="true"/>
-            </div>
-            <button id='close-path-button' class='persistent-tool'>Close path</button>
-            <button id='help-button' class='persistent-tool'>i</button>
-    </div>
-
-    <script src="Common.js"></script>
-    <script src="AppState.js"></script>
-    <script type="module" src="main.js"></script>
-
-    <div id='help-content' style="display:none;" >
-        <details>
-          <summary>Info</summary>
-          <div>
-            <p class='help-paragraph'>PROJECT WILL NOT AUTOSAVE UNTIL A SAVE FILE IS CREATED. After that it should autosave every 60 seconds. Projects can be loaded as well.</p>
-            <p class='help-paragraph'>The autosave is a bit excessive, but for the time being, it prevents dataloss pretty well. In theory, with this gratuitous autosave, you can always revert back if you accidentally break something.</p>
-            <p class='help-paragraph'>AutoSaves are stored in the Saves/Backups folder</p>
-            <p class='help-paragraph'>Map layers are a work in progress, objects fading out. Disabled for now for testing purposes</p>
-            <p class='help-paragraph'>Don't be ridiculous with the undo, if you think that a certain pattern of behavior might break it, it will. Loading an old document *might* remove undo history. Calling undo at this point might be sketchy.</p>
-          </div>
-        </details>
-      
-        <details>
-          <summary>Navigation & General Usage</summary>
-          <div>
-            <p class='help-paragraph'>General Navigation: MouseWheel click and drag to pan the view.</p>
-            <p class='help-paragraph'>Mousewheel to scroll</p>
-            <p class='help-paragraph'>Snapshots are created on mouse up. This enables undo with ctrl-z. I defaulted the undo history to 20, can be increased.</p>
-          </div>
-        </details>
-      
-        <details>
-          <summary>Tools & Features</summary>
-          <div>
-            <p class='help-paragraph'>Freedraw tool has brushwidth slider, it does nothing, as with infinite zoom, this presents a problem. We'll get there</p>
-            <p class='help-paragraph'>Simplify lines defaults to on, this reduces the amount of points created, and the line is simplified. Can lead to slightly unexpected lines, but much nicer for coastal lines.</p>
-            <p class='help-paragraph'>Selection tool: when holding shift, rectangular selection is created. When not holding shift, drag will move the selected points. Delete key to delete paths. Shift click on nothing to deselect all.</p>
-            <p class='help-paragraph'>Delete function now prompts for confirmation if deleting more than 5 points, because I may have accidentally deleted hundreds on accident one time. Path selection has since been updated, but just to be safe.</p>
-            <p class='help-paragraph'>Coastal Tool: Once a path is selected, the ENTIRE PATH in which the selected points reside can be subdivided, and displaced.</p>
-            <p class='help-paragraph'>Deleting a large internal section of a coastline, if it intersects itself should resolve the path for you(connecting the points)</p>
-            <p class='help-paragraph'>
-            Add Label Tool: Shift click to add new text. Double click to edit existing text. Font size adjuster is in the info panel. Text can be moved with the Selection Tool.
-            </p>
-          </div>
-        </details>
-
-    </div>
-   
-
-</body>
+            <details>
+                <summary>Tools & Features</summary>
+                <div>
+                    <p class="help-paragraph">
+                        Freedraw tool has brushwidth slider, it does nothing, as
+                        with infinite zoom, this presents a problem. We'll get
+                        there
+                    </p>
+                    <p class="help-paragraph">
+                        Simplify lines defaults to on, this reduces the amount
+                        of points created, and the line is simplified. Can lead
+                        to slightly unexpected lines, but much nicer for coastal
+                        lines.
+                    </p>
+                    <p class="help-paragraph">
+                        Selection tool: when holding shift, rectangular
+                        selection is created. When not holding shift, drag will
+                        move the selected points. Delete key to delete paths.
+                        Shift click on nothing to deselect all.
+                    </p>
+                    <p class="help-paragraph">
+                        Delete function now prompts for confirmation if deleting
+                        more than 5 points, because I may have accidentally
+                        deleted hundreds on accident one time. Path selection
+                        has since been updated, but just to be safe.
+                    </p>
+                    <p class="help-paragraph">
+                        Coastal Tool: Once a path is selected, the ENTIRE PATH
+                        in which the selected points reside can be subdivided,
+                        and displaced.
+                    </p>
+                    <p class="help-paragraph">
+                        Deleting a large internal section of a coastline, if it
+                        intersects itself should resolve the path for
+                        you(connecting the points)
+                    </p>
+                    <p class="help-paragraph">
+                        Add Label Tool: Shift click to add new text. Double
+                        click to edit existing text. Font size adjuster is in
+                        the info panel. Text can be moved with the Selection
+                        Tool.
+                    </p>
+                </div>
+            </details>
+        </div>
+    </body>
 </html>

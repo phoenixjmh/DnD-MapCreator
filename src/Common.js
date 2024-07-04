@@ -1,3 +1,4 @@
+
 //path objects will take a path, and a layer that they were created on
 let AllPathObjects = [];
 function AddPathObject(PathObject) {
@@ -51,11 +52,18 @@ function DEBUG_CLEAR_CIRCLES() {
   });
   DEBUG_CIRCLES.length = 0;
 }
+
+function OnProjectLoad() {
+  let zoom_level_display = document.querySelector("#zoom-value");
+  zoom_level_display.textContent = currentZoomLevel;
+}
 ////////////////////////
 //      GLOBAL VARS
 ///////////////////////
 
 let currentFillColor;
+
+let currentZoomLevel;
 
 paper.setup("myCanvas", {
   contextOptions: {

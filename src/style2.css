@@ -1,0 +1,326 @@
+/* General Styling */
+:root {
+    --primary-color: #2196f3; /* Blue accent for buttons, etc. */
+    --background-color: #263238; /* Dark background */
+    --panel-color: #37474f; /* Slightly lighter for panels */
+    --text-color: #eceff1; /* Light text for contrast */
+    --tool-color: #455a64;
+}
+
+body {
+    width: 100%;
+    height: 100vh; /* Use viewport height */
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+    margin: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    overflow: hidden; /* Prevent scrollbars on the body */
+    transition: background-color 0.5s;
+}
+
+/* Main Container */
+#app-container {
+    display: flex;
+    height: calc(100vh - 3rem); /* Account for footer */
+    padding: 1rem;
+    overflow: hidden;
+    transition: padding 0.5s;
+}
+
+/* Main Panel (Canvas Area) */
+#main-panel {
+    flex: 1; /* Takes up remaining space */
+    min-width: 0; /* Allow content to shrink */
+    overflow: hidden; /* Show scrollbar if content overflows */
+    transition: flex 0.5s;
+}
+
+#myCanvas {
+    width: 100%;
+    height: calc(100% - 2rem); /* Adjust for title bar */
+    border: 1px solid #455a64; /* Subtler border */
+    background-color: white;
+    overflow: hidden;
+    scrollbar-width: none;
+    transition: border-color 0.5s;
+}
+
+#myCanvas:hover {
+    border-color: var(--primary-color);
+}
+
+#project_title_container {
+    text-align: center;
+    padding: 0.5rem;
+    border-bottom: 1px solid #455a64;
+    transition: border-color 0.5s;
+}
+
+#project_title_container:hover {
+    border-color: var(--primary-color);
+}
+
+#map_name_label {
+    font-size: 1.2rem;
+}
+
+#zoom_level_display {
+    padding: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent */
+    border-radius: 5px;
+}
+
+/* Side Panel (Tools) */
+#sidepanel {
+    width: 10rem; /* Fixed width for side panel */
+    margin-left: 1rem;
+    margin-top: 2.5rem;
+    background-color: var(--panel-color);
+    border-radius: 0.5rem;
+    overflow-y: auto; /* Show scrollbar if tools overflow */
+    transition: background-color 0.5s;
+}
+
+#sidepanel:hover {
+    background-color: var(--tool-color);
+}
+
+.toolbar {
+    padding: 1rem;
+}
+
+.tool {
+    display: block;
+    padding: 0.8rem;
+    margin-bottom: 0.5rem;
+    background-color: var(
+        --tool-color
+    ); /* Slightly darker background for tools */
+    color: var(--text-color);
+    text-align: center;
+    border-radius: 0.3rem;
+    text-decoration: none;
+    transition:
+        background-color 0.2s,
+        transform 0.3s;
+    /* Smooth hover effect */
+    font-size: 0.8rem;
+}
+
+.tool:hover {
+    background-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+.tool-info {
+    padding: 1rem;
+    border-top: 1px solid var(--text-color);
+}
+
+/* Range Slider */
+input[type="range"] {
+    margin-top: 0.5rem;
+}
+
+/* Fractalize Controls */
+#fractalize_controls {
+    border-top: 1px solid var(--text-color); /* Match tool-info style */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    padding-top: 1rem;
+}
+
+#fractalize_automated_checkbox {
+    margin-bottom: 0.5rem; /* Add some space below the checkbox */
+    border-radius: 0.5rem;
+    padding-top: 1rem;
+}
+
+/* Strength Label and Slider */
+#fractalize_intensity_slider {
+    vertical-align: middle; /* Align them vertically */
+    width: 100%;
+}
+
+#strength-value {
+    display: inline-block;
+    width: 50px; /* Adjust as needed */
+    text-align: right;
+}
+
+#fractalize_button {
+    border-radius: 0.5rem;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    padding: 0.8rem;
+    vertical-align: middle;
+    transition:
+        background-color 0.2s,
+        transform 0.3s;
+}
+
+#fractalize_button:hover {
+    background-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+#persistent-tools {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: var(--panel-color); /* Match the side panel background */
+    padding: 0.5rem;
+    border-radius: 0.5rem; /* Add rounded corners */
+    z-index: 2; /* Ensure it's above other content (if needed) */
+    width: auto; /* Allow the container to fit its content */
+    gap: 10px; /* Add consistent spacing between items */
+    font-size: 0.7rem;
+    transition: background-color 0.5s;
+}
+
+#persistent-tools:hover {
+    background-color: var(--tool-color);
+}
+
+.persistent-tool {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent */
+    border-radius: 5px;
+    transition:
+        background-color 0.2s,
+        transform 0.3s;
+}
+
+.persistent-tool:hover {
+    background-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+#help-button {
+    background-color: red;
+    color: var(--text-color);
+    border: none;
+    border-radius: 100%;
+    height: 2rem;
+    width: 2rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+#help-button:hover {
+    transform: rotate(90deg);
+}
+
+#help-content {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    height: 60%;
+    position: absolute;
+    top: 20%;
+    left: 15%;
+    z-index: 1;
+    background-color: black;
+    font-size: 1.5rem;
+    overflow: auto;
+    transition: background-color 0.5s;
+}
+
+summary {
+    padding: 1rem;
+    color: green;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+summary:hover {
+    color: var(--primary-color);
+}
+
+.help-paragraph {
+    border-bottom: 1px solid var(--text-color);
+    padding: 1rem;
+    font-size: 1rem;
+}
+
+/* Button Styling */
+button {
+    display: block;
+    padding: 0.2rem;
+    background-color: #455a64; /* Slightly darker background for tools */
+    color: var(--text-color);
+    text-align: center;
+    border-radius: 0.3rem;
+    text-decoration: none;
+    border: none;
+    transition:
+        background-color 0.2s,
+        transform 0.3s;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+/* Custom Color Selector */
+#custom-color-selector {
+    width: 100%;
+    height: 3rem;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    transition:
+        background-color 0.2s,
+        transform 0.3s;
+}
+
+#custom-color-selector:hover {
+    background-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+/* Color Palette */
+#color-palette {
+    border: 1px solid var(--text-color);
+    display: grid;
+    grid-template-columns: repeat(
+        7,
+        minmax(12px, 1fr)
+    ); /* Adjust for number of colors */
+    gap: 1px;
+    transition: border-color 0.5s;
+}
+
+#color-palette:hover {
+    border-color: var(--primary-color);
+}
+
+.colorSwatch {
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition:
+        transform 0.3s,
+        border-color 0.2s;
+}
+
+.colorSwatch:hover {
+    transform: scale(1.2);
+    border-color: var(--primary-color);
+}
+
+.property-label {
+    font-size: 0.7rem;
+}
