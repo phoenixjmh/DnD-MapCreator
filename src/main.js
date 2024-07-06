@@ -90,21 +90,18 @@ let CreateAndAssignTools = (function () {
 
   let polygonal_tool_button = document.querySelector("#polygonal-tool-button");
   polygonal_tool_button.onclick = (e) => {
-    // PolygonalTool.OnActivate();
     ToolActivationHandler(PolygonalTool, polygonal_tool_button);
     Tools_Polygonal.activate();
   };
 
   let line_tool_button = document.querySelector("#line_tool_button");
   line_tool_button.onclick = (e) => {
-    // LineTool.OnActivate();
     ToolActivationHandler(LineTool, line_tool_button);
     Tools_Line.activate();
   };
 
   let freedraw_tool_button = document.querySelector("#freedraw_tool_button");
   freedraw_tool_button.onclick = (e) => {
-    // FreeDrawTool.OnActivate();
     ToolActivationHandler(FreeDrawTool, freedraw_tool_button);
     Tools_FreeDraw.activate();
   };
@@ -116,7 +113,6 @@ let CreateAndAssignTools = (function () {
 
   let dotlabel_tool_button = document.querySelector("#dotlabel_tool_button");
   dotlabel_tool_button.onclick = (e) => {
-    // DotLabelTool.OnActivate();
     ToolActivationHandler(DotLabelTool, dotlabel_tool_button);
     Tools_DotLabel.activate();
   };
@@ -125,20 +121,17 @@ let CreateAndAssignTools = (function () {
   text_tool_button.onclick = (e) => {
     Tools_AddLabels.activate();
     ToolActivationHandler(TextTool, text_tool_button);
-    // TextTool.OnActivate();
   };
 
   let fill_tool_button = document.querySelector("#fill_tool_button");
   fill_tool_button.onclick = (e) => {
     Tools_Fill.activate();
-    // FillTool.OnActivate();
     ToolActivationHandler(FillTool, fill_tool_button);
   };
 
   let selection_tool_button = document.querySelector("#selection_tool_button");
   selection_tool_button.onclick = function () {
     Tools_Selection.activate();
-    // SelectionTool.OnActivate();
     ToolActivationHandler(SelectionTool, selection_tool_button);
   };
   let ALL_TOOLS = [

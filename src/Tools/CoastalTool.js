@@ -7,8 +7,8 @@ var CoastalTool = (function() {
     //if automated, we step down the noise based on the amount of
     //subdivided points, otherwise, we use the user supplied value
 
-    
-    function Fractalize(automated, value = 0) {
+
+    function Fractalize() {
         if (getSelectedPaths().length > 1) {
             alert(
                 `There are ${getSelectedPaths().length} paths selected. Do this one at a time.`,
@@ -17,14 +17,7 @@ var CoastalTool = (function() {
         }
         let newPoints = Subdivide();
 
-        if (!automated) {
-            AddNoise(value, newPoints);
-        } else {
-            //y=x^2/5
-            let zoomScalar = Math.max(Math.abs(currentZoomLevel), 1);
-            let noiseFactor = 200 * zoomScalar / (newPoints.length*zoomScalar) + 1;
-            AddNoise(noiseFactor, newPoints);
-        }
+        AddNoise(newPoints);
     }
 
     function Subdivide() {
@@ -56,9 +49,8 @@ var CoastalTool = (function() {
         }
     }
 
-    function AddNoise(noiseIntensity, pointsToMove) {
+    function AddNoise(pointsToMove) {
         let selectedPaths = getSelectedPaths();
-        console.log(`NOISE LEVEL ${noiseIntensity}`);
 
         let selectedPath = selectedPaths[0];
         for (let i = 0; i < pointsToMove.length; i++) {
@@ -76,10 +68,8 @@ var CoastalTool = (function() {
                 selectedPath._segments[
                     (originalPointIndex + 1) % selectedPath._segments.length
                 ].point;
-            let randomDivisor=Math.floor(Math.random()*4)+4;
-            console.log(randomDivisor);
-            let distNoise=(prevPoint.getDistance(nextPoint)/randomDivisor);
-            console.log(distNoise,"Distance");
+            let randomDivisor = Math.floor(Math.random() * 4) + 4;
+            let distNoise = (prevPoint.getDistance(nextPoint) / randomDivisor);
 
             const offset = randomVector.multiply(distNoise);
             const newPoint = point.add(offset);
@@ -94,7 +84,6 @@ var CoastalTool = (function() {
                 console.log("POINT REJECTED");
                 continue;
             }
-
             // Update the point
             selectedPath._segments[originalPointIndex].point = newPoint;
         }
@@ -107,77 +96,23 @@ var CoastalTool = (function() {
 
         const fractalizeControls = document.createElement("div");
         fractalizeControls.id = "fractalize_controls";
-        let checkbox_label = Object.assign(document.createElement("label"), {
-            for: "fractalize_automated_checkbox",
-            textContent: "Automated",
-        });
 
-        let automatedCheckbox = Object.assign(document.createElement("input"), {
-            type: "checkbox",
-            id: "fractalize_automated_checkbox",
-            onchange: (e) => {
-                let isChecked = automatedCheckbox.checked;
-                if (!isChecked) {
-                    fractalizeControls.innerHTML = "";
-                    let strengthValueLabel = Object.assign(
-                        document.createElement("label"),
-                        {
-                            for: "fractalize_intensity_slider",
-                            textContent: "Strength:",
-                        },
-                    );
-                    let intensitySlider = Object.assign(document.createElement("input"), {
-                        type: "range",
-                        min: "0.1",
-                        max: "70",
-                        step: "1",
-                        id: "fractalize_intensity_slider",
-                        value: "1",
-                        oninput: (e) => {
-                            strengthValueLabel.textContent = e.target.value;
-                        },
-                    });
-                    let fractalize_button = Object.assign(
-                        document.createElement("button"),
-                        {
-                            id: "fractalize_button",
-                            textContent: "Fractalize",
-                            onclick: (e) => {
-                                e.preventDefault();
-                                Fractalize(false, intensitySlider.value);
-                            },
-                        },
-                    );
-                    fractalizeControls.append(
-                        strengthValueLabel,
-                        intensitySlider,
-                        fractalize_button,
-                    );
-                } else {
-                    fractalizeControls.innerHTML = "";
-                    let fractalize_button = Object.assign(
-                        document.createElement("button"),
-                        {
-                            id: "fractalize_button",
-                            textContent: "Fractalize",
-                            onclick: (e) => {
-                                e.preventDefault();
-                                Fractalize(true, 0);
-                            },
-                        },
-                    );
-                    fractalizeControls.append(fractalize_button);
-                }
+        fractalizeControls.innerHTML = "";
+        let fractalize_button = Object.assign(
+            document.createElement("button"),
+            {
+                id: "fractalize_button",
+                textContent: "Fractalize",
+                onclick: (e) => {
+                    e.preventDefault();
+                    Fractalize();
+                },
             },
-        });
-        automatedCheckbox.dispatchEvent(new Event("change"));
-        toolPropertiesPanel.append(
-            checkbox_label,
-            automatedCheckbox,
-            fractalizeControls,
         );
+        fractalizeControls.append(fractalize_button);
 
         m_Button.style.backgroundColor = "orange";
+        toolPropertiesPanel.append(fractalizeControls);
     }
 
     function OnDeactivate() {

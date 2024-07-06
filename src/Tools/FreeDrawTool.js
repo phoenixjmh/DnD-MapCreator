@@ -33,11 +33,8 @@ var FreeDrawTool = (function() {
             return;
         }
         if (simplify_checkbox.checked) {
-            for (let i = 0; i < 20; i++) {
                 path.simplify(GetTolerance());
                 path.smooth();
-
-            }
         }
 
         let PathObject = {
