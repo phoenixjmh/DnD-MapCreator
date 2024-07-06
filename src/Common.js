@@ -31,7 +31,9 @@ function getSelectedPaths() {
       p.push(item);
     }
   });
-  console.log(p);
+    let segs=p[0]._segments;
+    let points=segs.map(val=>({x:val.point.x,y:val.point.y}));
+  console.log("SELECTED ",points);
   return p;
 }
 
@@ -63,7 +65,7 @@ function OnProjectLoad() {
 
 let currentFillColor;
 
-let currentZoomLevel;
+let currentZoomLevel=0;
 
 paper.setup("myCanvas", {
   contextOptions: {

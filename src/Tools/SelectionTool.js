@@ -48,6 +48,7 @@ var SelectionTool = (function () {
       to: point,
       strokeColor: "black",
       dashArray: [4, 4],
+    strokeScaling:false,
     });
   }
 
@@ -86,6 +87,7 @@ var SelectionTool = (function () {
       });
     });
     if (!hit) deselectAllPoints();
+    getSelectedPaths();
   }
 
   function selectTextWithinRectangle() {
