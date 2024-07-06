@@ -7,6 +7,7 @@ async function NewProject(project) {
   if (project && !hasBeenSaved) {
     CONFIRMDELETE = confirm(`Exit without saving?`);
     if (!CONFIRMDELETE) return;
+    window.api.refreshConfirmed();
   }
 }
 
@@ -92,6 +93,8 @@ function stopAutosaving() {
 //
 async function LoadProject(project) {
   stopAutosaving();
+
+    //wait for that to finish before continuing
 
   const startInDirectory = await window.api.getSavesFolderPath();
   const result = await window.api.showOpenDialog(startInDirectory);

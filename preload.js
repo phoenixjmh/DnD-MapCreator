@@ -32,13 +32,13 @@ contextBridge.exposeInMainWorld("api", {
         return ipcRenderer.sendSync('read-file', filePath);
     },
 
-    onSaveProject:((callback) => ipcRenderer.on('trigger-save-project', (_event) => callback())),
+    onSaveProject: ((callback) => ipcRenderer.on('trigger-save-project', (_event) => callback())),
 
-    onLoadProject:((callback) => ipcRenderer.on('trigger-load-project', (_event) => callback())),
+    onLoadProject: ((callback) => ipcRenderer.on('trigger-load-project', (_event) => callback())),
 
-    onNewProject:((callback)=>ipcRenderer.on('trigger-new-project',(_event)=>callback())),
-    
-    refreshConfirmed:()=>ipcRenderer.send('new-project-destructive'),
+    onNewProject: ((callback) => ipcRenderer.on('trigger-new-project', (_event) => callback())),
+
+    refreshConfirmed: () => ipcRenderer.send('new-project-destructive'),
 
 });
 

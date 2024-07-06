@@ -57,54 +57,18 @@ let Viewport = (function () {
         return false;
       }
 
-      //scale the whole scene first, then revert that for minimized objects
-
-      // paper.project.activeLayer.scale(scalingFactor,viewPos); // Scale
-
-      // Define the distance threshold
       const distanceThreshold = 0.0000000000001;
 
       paper.project.activeLayer.children.forEach((item) => {
         if (hasClosePoints(item, distanceThreshold)) {
           item.shouldStopScaling = true;
           item.stoppedAt = currentZoomLevel;
-          // item.translate(
-          //   viewPos.subtract(item.position).multiply(1 - scalingFactor.x),
-          // );
           console.log("TOO SMALL");
         }
       });
       paper.project.activeLayer.scale(scalingFactor, viewPos);
       paper.view.update();
     });
-    // Apply scaling conditionally
-    // paper.project.activeLayer.children.forEach((item) => {
-    //   if (!hasClosePoints(item, distanceThreshold)||zoomFactor>1&&currentZoomLevel>=item.data.StoppedAt) {
-    //     if(zoomFactor>1&&currentZoomLevel>=item.data.StoppedAt)
-    //       {
-    //         item.data.StoppedAt='';
-    //         if(item.data.isMinimumSize)
-    //         item.isMinimumSize=false;
-
-    //       }
-    //     item.transform(matrix);
-    //   }
-    //   else{
-    //     if(!item.data.isMinimumSize){
-
-    //     item.data.StoppedAt=currentZoomLevel;
-    //     console.log("CLOSE POINTS",item.data);
-    //     item.data.isMinimumSize=true;
-    //     }
-
-    //   }
-    // });
-
-    // // paper.project.activeLayer.scale(scalingFactor, viewPos); // Scale
-    // paper.project.activeLayer.transform(matrix);
-
-    // paper.view.update();
-
     //////////////////////////////
 
     //  PAN AND SCAN
